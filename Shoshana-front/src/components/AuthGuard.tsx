@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react';
-import { ReactPropTypes } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserDataContext } from '../services/services';
+import { ServicesContext } from '../services/services';
 
 interface Props {
 	Component: () => JSX.Element;
@@ -10,10 +9,14 @@ interface Props {
 
 const AuthGuard = ({ Component }: Props) => {
 	const navigate = useNavigate();
-	const userData = useContext(UserDataContext);
+	const {authService} = useContext(ServicesContext);
+	
+	console.log(authService.isLoggedIn());
 
-	useEffect(() => {
-		// if (!userData) navigate('/');
+	useEffect(()=> {
+		if(!authService.isLoggedIn()) {
+			navigate("/");
+		}
 	}, []);
 
 	return <Component />;

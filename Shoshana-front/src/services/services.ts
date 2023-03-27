@@ -2,17 +2,10 @@ import { createContext } from "react"
 
 type ServiceType = 'debug' | 'production'
 
-export const ServicesContext = createContext<ServiceType>('production');
-export const UserDataContext = createContext<UserData | null>(null);
-
-interface AuthService {
-  login: (password: string, username: string) => Promise<UserData | undefined>
-  register: (password: string, username: string) => Promise<UserData | undefined>
-}
-
-export interface UserData {
-  username: string
-  id: string
+export interface AuthService {
+  login: (password: string, username: string) => Promise<void>
+  register: (password: string, username: string) => Promise<void>
+  isLoggedIn : () => boolean;
 }
 
 interface Services {
@@ -22,10 +15,17 @@ interface Services {
 const createServices = (type: ServiceType): Services => {
   if (type != 'debug') throw new Error('not debug')
 
+  let data = {
+    loggedIn : false
+  };
+
   return {
     authService: {
       login: async (username, password) => {
+
+        data.loggedIn = true;
         const savedUsers = localStorage.getItem('users');
+        
         if (savedUsers) return;
 
         // if login successful change state to logged in with user data
@@ -33,7 +33,7 @@ const createServices = (type: ServiceType): Services => {
 
         // ? for debug purposes (for now), login is always successful
         
-        return { username, id: '1' }
+        //return { username, id: '1' }
       },
       
       register: async (username, password) => {
@@ -43,10 +43,16 @@ const createServices = (type: ServiceType): Services => {
         // if login successful change state to logged in with user data
         // else return error object to login component
 
-        return { username, id: '1' }
+        //return { username, id: '1' }
+      },
+
+      isLoggedIn: () => {
+        return data.loggedIn;
       }
     }
   }
 }
+
+export const ServicesContext = createContext<Services>(createServices("debug"));
 
 export default createServices
