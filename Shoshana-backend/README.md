@@ -14,8 +14,8 @@ interface AdminUser {
 
 ### Auth
 
-* login
-* logout
+* login = (username: string, password: string): User / UserData
+* logout = (): void
 
 ## Business
 
@@ -43,7 +43,7 @@ interface Optional<TRes,TErr> {
 
 ### Auth
 
-* login
-* logout
-* register
-* getBusiness -> BusinessId -> Optional<Business, string>
+* login = (username: string, password: string): BusinessUser / BusinessUserData
+* logout = (): void
+* register = (username: string, password: string): BusinessUser / BusinessUserData
+* getBusiness = (BusinessId: string): Optional<Business, string>
