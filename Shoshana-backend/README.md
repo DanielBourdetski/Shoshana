@@ -22,7 +22,7 @@ interface AdminUser {
 ### Data structures
 ```typescript
 type Business = {
-    id: guid;
+    id: guid
 };
 
 interface BusinessUser {
@@ -31,7 +31,7 @@ interface BusinessUser {
         username : string
         password : string // for now not hashed 
     }
-    businessId : guid;
+    businessId : guid
 }
 
 interface Optional<TRes,TErr> {
@@ -46,4 +46,4 @@ interface Optional<TRes,TErr> {
 * login = (username: string, password: string): BusinessUser / BusinessUserData
 * logout = (): void
 * register = (username: string, password: string): BusinessUser / BusinessUserData
-* getBusiness = (BusinessId: string): Optional<Business, string>
+* getBusiness = [auth: admin/business owner](BusinessId: string): Optional<Business, string>
