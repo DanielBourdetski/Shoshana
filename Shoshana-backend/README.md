@@ -46,4 +46,6 @@ interface Optional<TRes,TErr> {
 * login = (username: string, password: string): BusinessUser / BusinessUserData
 * logout = (): void
 * register = (username: string, password: string): BusinessUser / BusinessUserData
+
+### Crud
 * getBusiness = [auth: admin/business owner](BusinessId: string): Optional<Business, string>

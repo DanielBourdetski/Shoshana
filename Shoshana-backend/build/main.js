@@ -4,18 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const database_1 = require("./database");
 const app = (0, express_1.default)();
 const port = 3000;
+(0, database_1.loadDB)("mongodb://localhost:27017").catch(console.dir);
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
-    let a = getData("this is data");
-    if (a.ok) {
-        console.log(a.result);
-    }
 });
-function getData(id) {
-    return resOk("yes");
-}

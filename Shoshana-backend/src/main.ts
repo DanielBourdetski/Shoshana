@@ -1,8 +1,10 @@
 import Express from "express";
-import { Opt, resOk } from "./optionals";
+import { loadDB } from "./database";
 
 const app = Express();
 const port = 3000
+
+loadDB("mongodb://localhost:27017").catch(console.dir);
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
