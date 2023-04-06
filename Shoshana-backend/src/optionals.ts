@@ -1,22 +1,27 @@
 export {};
 
-function resOk<TRes, TErr>(result : TRes) : Optional<TRes, TErr> {
+export interface OptionalType {
+    ok :boolean
+}
+
+export type Opt<TResult, TError> = {
+    ok : true,
+    result : TResult
+} | {
+    ok : false,
+    error : TError
+};
+
+export type OptNoErr<TResult> = Opt<TResult, undefined>;
+
+export function resOk<TResult, TError>(result : TResult) : Opt<TResult, TError> {
     return {ok : true, result};
 }
 
-function resErr<TRes, TErr>(error : TErr) : Optional<TRes, TErr> {
+export function resErr<TResult, TError>(error : TError) : Opt<TResult, TError> {
     return {ok : false, error};
 }
 
-declare global {
-    type Optional<TRes, TErr> = {
-        ok : true,
-        result : TRes
-    } | {
-        ok : false,
-        error : TErr
-    };
-
-    function resOk<TRes, TErr>(result : TRes) : Optional<TRes, TErr>
-    function resErr<TRes, TErr>(error : TErr) : Optional<TRes, TErr>
+export function resErrNon<TResult>() : OptNoErr<TResult>{
+    return {ok: false, error: undefined};
 }
