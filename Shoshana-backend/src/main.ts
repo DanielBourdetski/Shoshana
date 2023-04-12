@@ -7,7 +7,6 @@ import { JWTToken, UserType } from "./types";
 const app = Express();
 const port = 3000
 
-//loadDB("mongodb://localhost:27017").catch(console.dir);
 <<<<<<< HEAD
 loadDB("mongodb://localhost:27017").catch(console.dir);
 
