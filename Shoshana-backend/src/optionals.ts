@@ -14,14 +14,14 @@ export type Opt<TResult, TError> = {
 
 export type OptNoErr<TResult> = Opt<TResult, undefined>;
 
-export function resOk<TResult, TError>(result : TResult) : Opt<TResult, TError> {
+export function optOk<TResult, TError>(result : TResult) : Opt<TResult, TError> {
     return {ok : true, result};
 }
 
-export function resErr<TResult, TError>(error : TError) : Opt<TResult, TError> {
+export function optErr<TResult, TError>(error : TError) : Opt<TResult, TError> {
     return {ok : false, error};
 }
 
-export function resErrNon<TResult>() : OptNoErr<TResult>{
+export function optErrNon<TResult>() : OptNoErr<TResult>{
     return {ok: false, error: undefined};
 }

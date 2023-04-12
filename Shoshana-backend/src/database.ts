@@ -1,4 +1,4 @@
-import { Opt, OptNoErr, resErrNon, resOk } from "./optionals"
+import { Opt, OptNoErr, optErrNon, optOk } from "./optionals"
 import { MongoClient, ServerApiVersion } from "mongodb"
 
 export type AdminUser = {
@@ -29,6 +29,6 @@ export async function loadDB(url: string) : Promise<void> {
 
 export function getAdminByUsername(username: string) : OptNoErr<AdminUser> {
 
-    return resErrNon();
+    return optErrNon();
     
 }
