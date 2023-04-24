@@ -1,7 +1,12 @@
 import { JWTToken, UserType } from "./types";
 import type { Request, Response, NextFunction } from "express";
-import { varifyJWTToken } from "./jwt";
+import { verifyJWTToken } from "./jwt";
 
+/**
+ * creates middleware function for express.
+ * @param userType array of user types that can access the the next middleware after this one.
+ * @return auth middleware function for express.  
+ */
 export function createAuthMiddleware(userTypes: UserType[]): (req: Request, res: Response & {jwtToken? : JWTToken}, next: NextFunction) => void {
 
     return (req, res, next) => {
@@ -20,7 +25,7 @@ export function createAuthMiddleware(userTypes: UserType[]): (req: Request, res:
             return;
         }
         
-        let resJwt = varifyJWTToken<JWTToken>(token);
+        let resJwt = verifyJWTToken<JWTToken>(token);
         
         if (!resJwt.ok) // invalid token
         {
@@ -28,10 +33,7 @@ export function createAuthMiddleware(userTypes: UserType[]): (req: Request, res:
             return;
         }
 
-        let jwtToken : JWTToken = resJwt.result.data;
-        
-        console.log(userTypes);
-        console.log(jwtToken);
+        let jwtToken : JWTToken = resJwt.res.data;
 
         let foundUserType : boolean = false;
 

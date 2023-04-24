@@ -1,32 +1,37 @@
-import { Opt, OptNoErr, optErr, optErrNon, optOk } from "./optionals";
+import { Option, none, some } from "topkek-utils";
 import { createHmac } from 'node:crypto';
 
-export type Token<T> = {
+export type TokenPayload<T> = {
     data: T,
     issueDate: string,
 }
 
-export function varifyJWTToken<T>(token: string): Opt<Token<T>, string> {
+/**
+ * @param token bearer token, not parsed.
+ * @returns if parsed successfully returns the token playload, else returns error string.
+ * @example varifyJWTToken<{username: string}>("1asd123.1231dasd.12312edasd");
+ */
+export function verifyJWTToken<T>(token: string): Option<TokenPayload<T>, string> {
 
     let [headerBase64, payloadBase64, signature] = token.split('.');
 
-    if (!(headerBase64 && payloadBase64 && signature)) optErr("bad token segments");
+    if (!(headerBase64 && payloadBase64 && signature)) none("bad token segments");
 
     const trueSignature = createHmac('sha256', secret)
         .update(headerBase64 + "." + payloadBase64)
         .digest('hex');
 
-    if (trueSignature !== signature) return optErr("bad signature");
+    if (trueSignature !== signature) return none("bad signature");
 
     let header: any = JSON.parse(Buffer.from(headerBase64, "base64").toString("ascii"));
     // console.log(header);
     // if (header.alg !== "HS256" || header.typ !== "JWT") return optErr("algorythm not supported segment");
 
-    let payload: Token<T> = JSON.parse(Buffer.from(payloadBase64, "base64").toString("ascii")) as Token<T>;
+    let payload: TokenPayload<T> = JSON.parse(Buffer.from(payloadBase64, "base64").toString("ascii")) as TokenPayload<T>;
     // console.log(payload);
     // if (!payload.data || !payload.issueDate) return optErr("bad token data");
 
-    return optOk(payload);
+    return some(payload);
 }
 
 const jwtHeaderBase64 = Buffer.from(JSON.stringify({
@@ -34,8 +39,14 @@ const jwtHeaderBase64 = Buffer.from(JSON.stringify({
     typ: "JWT"
 })).toString("base64");
 
+
+// @TODO check how to generate better secret
 const secret = 'this is bad secret';
 
+/**
+ * @param data additional playload data for the token.
+ * @returns jwt bearer token.
+*/
 export function generateJWTToken<T>(data: T): string {
 
     let payload = Buffer.from(JSON.stringify({
