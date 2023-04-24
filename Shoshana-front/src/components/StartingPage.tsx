@@ -1,23 +1,23 @@
-import { useContext, useState } from 'react';
-import { ServicesContext } from '../services/services';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux/es/exports';
+import authService from '../services/authService';
+import type { RootState } from '../store/store';
 
 const StartingPage = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
 	const navigate = useNavigate();
-	const {authService} = useContext(ServicesContext);
-
-	if(authService.isLoggedIn())
-	{
-		navigate("/manager");
-	}
+	
+	const userIsLoggedIn = useSelector((state: RootState) => state.general.isLoggedIn);
+	
+	useEffect(() => {
+		if (userIsLoggedIn) navigate("/manager");
+	}, [])
 	
 	const onLogin = async () => {
 		const userData = await authService.login(username, password);
-		
-		//if (userData === undefined) return;
 		
 		navigate("/manager");
 	};
@@ -25,7 +25,7 @@ const StartingPage = () => {
 	const onRegister = async () => {
 		const userData = await authService.register(username, password);
 
-		if (userData === undefined) return;
+		navigate('/manager')
 	};
 
 	return (

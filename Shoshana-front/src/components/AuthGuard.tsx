@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ServicesContext } from '../services/services';
+import authService from '../services/authService';
 
 interface Props {
 	Component: () => JSX.Element;
@@ -9,10 +9,7 @@ interface Props {
 
 const AuthGuard = ({ Component }: Props) => {
 	const navigate = useNavigate();
-	const {authService} = useContext(ServicesContext);
 	
-	console.log(authService.isLoggedIn());
-
 	useEffect(()=> {
 		if(!authService.isLoggedIn()) {
 			navigate("/");

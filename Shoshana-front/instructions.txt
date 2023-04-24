@@ -1,0 +1,2 @@
+for debugging:
+in generalSlicem: isLoggedIn is true by default, skipping the login/registration process
