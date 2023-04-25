@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { generalActions } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../../store/store";
+import VIEW from "./VIEW";
 
 const DEBUG = () => {
   const { isLoggedIn, user: loggedUser } = useSelector(
@@ -23,14 +24,21 @@ const DEBUG = () => {
   };
 
   return (
-    <div className="col DEBUG">
+    <div className="flex flex-col w-80 DEBUG backdrop-blur">
+      <VIEW setView={() => {}} />
       <div className="row">
         {isLoggedIn ? (
-          <button className="btn" onClick={onLogout}>
+          <button
+            className="border border-black rounded p-1 mt-1"
+            onClick={onLogout}
+          >
             LOGOUT
           </button>
         ) : (
-          <button className="btn" onClick={onFastLogin}>
+          <button
+            className="border border-black rounded p-1 mt-1"
+            onClick={onFastLogin}
+          >
             FAST LOGIN
           </button>
         )}

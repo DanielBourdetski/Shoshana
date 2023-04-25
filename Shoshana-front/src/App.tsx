@@ -17,7 +17,7 @@ function App() {
   const [debug, setDebug] = useState(true);
 
   return (
-    <div className="app col">
+    <div className="w-full h-full p-4">
       <Routes>{routesArr}</Routes>
       {debug && <DEBUG />}
     </div>
