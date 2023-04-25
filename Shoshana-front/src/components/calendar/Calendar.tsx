@@ -4,7 +4,7 @@ import routes from "../../config/routes";
 const Calendar = () => {
   const { calendarRoutes } = routes;
   const routesArr = calendarRoutes.map((r) => (
-    <Route Component={r.Element} path={r.path} />
+    <Route key={r.path} Component={r.Element} path={r.path} />
   ));
   return (
     <div className="w-full h-full">
