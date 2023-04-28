@@ -1,7 +1,5 @@
 import Express from "express";
-import { ObjectId } from "mongodb";
-import { createAuthMiddleware } from "./authMiddleware";
-import { getAdminByUsername, loadDB, registerAdmin } from "./database";
+import { getUserByUsername, loadDB, registerUser } from "./database";
 import { generateJWTToken, verifyJWTToken } from "./jwt";
 import { JWTToken, UserType } from "./types";
 import cors from "cors";
@@ -10,14 +8,11 @@ import bodyParser from "body-parser";
 const app = Express();
 const port = 3000;
 
-loadDB("mongodb://127.0.0.1:27017").catch(console.dir);
-
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post("/admin/register", async (req, res) => {
+app.post("/register", async (req, res) => {
   let body = req.body as { username?: string; password?: string };
-  console.log(body);
 
   //validating query
   if (!body.username || !body.password) {
@@ -25,7 +20,7 @@ app.post("/admin/register", async (req, res) => {
     return;
   }
 
-  let user = await registerAdmin(body.username, body.password);
+  let user = await registerUser(body.username, body.password, UserType.Business);
   console.log(user);
 
   if (!user.ok) {
@@ -42,28 +37,28 @@ app.post("/admin/register", async (req, res) => {
   });
 });
 
-app.get("/admin/login", async (req, res) => {
-  let query = req.query as { username?: string; password?: string };
+app.post("/login", async (req, res) => {
+let body = req.body as { username?: string; password?: string };
 
   //validating query
-  if (!query.username || !query.password) {
+  if (!body.username || !body.password) {
     res.sendStatus(400);
 
     return;
   }
 
-  let user = await getAdminByUsername(query.username);
+  let user = await getUserByUsername(body.username);
 
   //user exists
   if (!user.ok) {
-    res.status(404).send("Invalid credentials");
+    res.sendStatus(400);
     return;
   }
 
   //valid credentials
   if (
-    user.res.username !== query.username ||
-    user.res.password !== query.password
+    user.res.username !== body.username ||
+    user.res.password !== body.password
   ) {
     res.sendStatus(400);
     return;
@@ -79,5 +74,11 @@ app.get("/admin/login", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on http://localhost:${port}`);
+    
+    loadDB("mongodb://127.0.0.1:27017").catch(console.dir)
+    .then(()=> {
+        registerUser("admin", "admin", UserType.Admin);
+    });
+
+    console.log(`Example app listening on http://localhost:${port}`);
 });
