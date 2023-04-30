@@ -24,7 +24,7 @@ const Week: React.FC<{ weekNumber?: number; year?: number }> = ({
 
   // TODO the direction should be set according to locale/system language
   return (
-    <div dir="rtl" className="mx-auto grid grid-cols-7 mb-20 h-full">
+    <div dir="rtl" className="mx-auto grid grid-cols-7 py-4 h-full">
       {week.map((day) => (
         <Day key={day.day} day={day} />
       ))}

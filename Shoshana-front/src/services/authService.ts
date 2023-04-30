@@ -1,4 +1,5 @@
 import store, { generalActions } from "../store/store";
+import httpService from "./httpService";
 
 type UserData = { username: string; id: string };
 type UserError = { error?: string };
@@ -20,37 +21,61 @@ interface AuthService {
 const { general } = store.getState();
 
 const authService: AuthService = {
-  login: async (username, password, DEBUG = false) => {
-    const savedUsers = localStorage.getItem("users");
-
+  login: async (username, password, DEBUG = false): Promise<any> => {
     // replacement for an unsuccessful login call
-    if (DEBUG) return { error: "error" };
+    if (DEBUG) throw new Error();
 
-    // if login successful change state to logged in with user data
-    // else return error object to login component
+    // if login -> successful change state to logged in with user data
+    // else -> return error object to login component
 
-    // ? for debug purposes (for now), login is always successful
+    try {
+      const loginResponse: string = await httpService.get(
+        "http://localhost:3000/admin/login",
+        {
+          params: { username, password },
+        }
+      );
 
-    // TODO create and provide real id from server
-    store.dispatch(generalActions.login({ username, id: "1" }));
+      // ? might need to be moved to another place
+      localStorage.setItem("token", loginResponse);
 
-    return { userData: { username, id: "1" } };
+      // TODO think of something better
+      return { ok: false };
+    } catch (err) {
+      // TODO handle error (pop ups , notifications)
+      console.log(err);
+      // TODO think of something better
+      return { ok: false };
+    }
   },
 
-  register: async (username, password, DEBUG = false) => {
+  register: async (username, password, DEBUG = false): Promise<any> => {
     const user = JSON.stringify({ username, id: "1" });
     localStorage.setItem("users", user);
 
     // replacement for an unsuccessful register call
     if (DEBUG) return { error: "some error" };
 
-    // if login successful change state to logged in with user data
-    // else return error object to login component
+    try {
+      const registerResponse: string = await httpService.post(
+        "http://localhost:3000/admin/register",
+        {
+          username,
+          password,
+        }
+      );
 
-    // TODO create and provide real id from server
-    store.dispatch(generalActions.login({ username, id: "1" }));
+      // ? might need to be moved to another place
+      localStorage.setItem("token", registerResponse);
 
-    return { username, id: "1" };
+      // TODO think of something better
+      return { ok: true };
+    } catch (err) {
+      // TODO handle error (pop ups , notifications)
+      console.log(err);
+      // TODO think of something better
+      return { ok: false };
+    }
   },
 
   isLoggedIn: () => store.getState().general.isLoggedIn,

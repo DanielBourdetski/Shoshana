@@ -28,7 +28,7 @@ const routes = [
 ];
 
 const calendarRoutes = [
-  { path: "month", Element: Month },
+  { path: "", Element: Month },
   { path: "month-row", Element: MonthRow },
   { path: "week", Element: Week },
 ];

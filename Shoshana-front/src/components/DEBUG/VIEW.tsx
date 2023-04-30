@@ -9,7 +9,7 @@ const VIEW: React.FC<{ setView: Function }> = ({ setView }) => {
       View:
       <button
         className="rounded border border-black p-2 m-2"
-        onClick={() => navigate("/calendar/month")}
+        onClick={() => navigate("/calendar")}
       >
         Month
       </button>

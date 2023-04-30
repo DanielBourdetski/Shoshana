@@ -5,6 +5,8 @@ import DEBUG from "./components/DEBUG/DEBUG";
 import { routesArr } from "./config/routes";
 
 function App() {
+  const [debug, setDebug] = useState(true);
+
   useEffect(() => {
     const toggleDebug = (e: KeyboardEvent) => {
       if (e.key === "F9") setDebug((cs) => !cs);
@@ -12,9 +14,10 @@ function App() {
 
     window.addEventListener("keydown", toggleDebug);
 
+    // TODO handle JWT: fetching from localhost, sending for confirmation
+
     return () => window.removeEventListener("keydown", toggleDebug);
-  }, []);
-  const [debug, setDebug] = useState(true);
+  }, [debug]);
 
   return (
     <div className="w-full h-full p-4">
