@@ -11,18 +11,16 @@ const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const app = (0, express_1.default)();
 const port = 3000;
-(0, database_1.loadDB)("mongodb://127.0.0.1:27017").catch(console.dir);
 app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json());
-app.post("/admin/register", async (req, res) => {
+app.post("/register", async (req, res) => {
     let body = req.body;
-    console.log(body);
     //validating query
     if (!body.username || !body.password) {
         res.status(400).send("No valid info");
         return;
     }
-    let user = await (0, database_1.registerAdmin)(body.username, body.password);
+    let user = await (0, database_1.registerUser)(body.username, body.password, types_1.UserType.Business);
     console.log(user);
     if (!user.ok) {
         res.status(400).send("Problem with the user");
@@ -36,22 +34,22 @@ app.post("/admin/register", async (req, res) => {
         }),
     });
 });
-app.get("/admin/login", async (req, res) => {
-    let query = req.query;
+app.post("/login", async (req, res) => {
+    let body = req.body;
     //validating query
-    if (!query.username || !query.password) {
+    if (!body.username || !body.password) {
         res.sendStatus(400);
         return;
     }
-    let user = await (0, database_1.getAdminByUsername)(query.username);
+    let user = await (0, database_1.getUserByUsername)(body.username);
     //user exists
     if (!user.ok) {
-        res.status(404).send("Invalid credentials");
+        res.sendStatus(400);
         return;
     }
     //valid credentials
-    if (user.res.username !== query.username ||
-        user.res.password !== query.password) {
+    if (user.res.username !== body.username ||
+        user.res.password !== body.password) {
         res.sendStatus(400);
         return;
     }
@@ -64,5 +62,9 @@ app.get("/admin/login", async (req, res) => {
     });
 });
 app.listen(port, () => {
+    (0, database_1.loadDB)("mongodb://127.0.0.1:27017").catch(console.dir)
+        .then(() => {
+        (0, database_1.registerUser)("admin", "admin", types_1.UserType.Admin);
+    });
     console.log(`Example app listening on http://localhost:${port}`);
 });
