@@ -6,14 +6,16 @@ import {
   ServerApiVersion,
   WithId,
 } from "mongodb";
+import { UserType } from "./types";
 
-export type AdminUser = WithId<{
+export type User = WithId<{
   username: string;
   password: string;
+  userType: UserType
 }>;
 
 let dbName = "test";
-let collectionAdmins = "admins";
+let collectionUsers = "users";
 
 let client: MongoClient;
 
@@ -36,22 +38,23 @@ export async function loadDB(url: string): Promise<void> {
   }
 }
 
-export async function getAdminByUsername(
+export async function getUserByUsername(
   username: string
-): ResolvedPromise<Option<AdminUser>> {
+): ResolvedPromise<Option<User>> {
   let res = await (client
     .db(dbName)
-    .collection(collectionAdmins)
-    .findOne({ username }) as Promise<AdminUser | null>);
+    .collection(collectionUsers)
+    .findOne({ username }) as Promise<User | null>);
   return res ? some(res) : none(undefined);
 }
 
-export async function registerAdmin(
+export async function registerUser(
   username: string,
-  password: string
+  password: string,
+  userType: UserType
 ): ResolvedPromise<Option<ObjectId>> {
   //cheching if user with same username already exists
-  let existingUser = await getAdminByUsername(username);
+  let existingUser = await getUserByUsername(username);
 
   if (existingUser.ok) {
     return none(undefined);
@@ -60,8 +63,8 @@ export async function registerAdmin(
   // inserting new user
   let res = await client
     .db(dbName)
-    .collection(collectionAdmins)
-    .insertOne({ username, password });
+    .collection(collectionUsers)
+    .insertOne({ username, password, userType });
 
   return some(res.insertedId);
 }
