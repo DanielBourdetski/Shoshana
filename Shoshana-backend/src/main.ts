@@ -20,7 +20,11 @@ app.post("/register", async (req, res) => {
     return;
   }
 
-  let user = await registerUser(body.username, body.password, UserType.Business);
+  let user = await registerUser(
+    body.username,
+    body.password,
+    UserType.Business
+  );
   console.log(user);
 
   if (!user.ok) {
@@ -38,11 +42,12 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-let body = req.body as { username?: string; password?: string };
+  let body = req.body as { username?: string; password?: string };
+  console.log(body);
 
   //validating query
   if (!body.username || !body.password) {
-    res.sendStatus(400);
+    res.status(400).send("Missing data");
 
     return;
   }
@@ -51,11 +56,12 @@ let body = req.body as { username?: string; password?: string };
 
   //user exists
   if (!user.ok) {
-    res.sendStatus(400);
+    res.status(404).send("Invalid credentials");
     return;
   }
 
   //valid credentials
+  // ? whats this?
   if (
     user.res.username !== body.username ||
     user.res.password !== body.password
@@ -74,11 +80,11 @@ let body = req.body as { username?: string; password?: string };
 });
 
 app.listen(port, () => {
-    
-    loadDB("mongodb://127.0.0.1:27017").catch(console.dir)
-    .then(()=> {
-        registerUser("admin", "admin", UserType.Admin);
+  loadDB("mongodb://127.0.0.1:27017")
+    .catch(console.dir)
+    .then(() => {
+      registerUser("admin", "admin", UserType.Admin);
     });
 
-    console.log(`Example app listening on http://localhost:${port}`);
+  console.log(`Example app listening on http://localhost:${port}`);
 });

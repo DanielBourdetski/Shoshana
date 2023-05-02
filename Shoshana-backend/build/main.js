@@ -36,18 +36,20 @@ app.post("/register", async (req, res) => {
 });
 app.post("/login", async (req, res) => {
     let body = req.body;
+    console.log(body);
     //validating query
     if (!body.username || !body.password) {
-        res.sendStatus(400);
+        res.status(400).send("Missing data");
         return;
     }
     let user = await (0, database_1.getUserByUsername)(body.username);
     //user exists
     if (!user.ok) {
-        res.sendStatus(400);
+        res.status(404).send("Invalid credentials");
         return;
     }
     //valid credentials
+    // ? whats this?
     if (user.res.username !== body.username ||
         user.res.password !== body.password) {
         res.sendStatus(400);
@@ -62,7 +64,8 @@ app.post("/login", async (req, res) => {
     });
 });
 app.listen(port, () => {
-    (0, database_1.loadDB)("mongodb://127.0.0.1:27017").catch(console.dir)
+    (0, database_1.loadDB)("mongodb://127.0.0.1:27017")
+        .catch(console.dir)
         .then(() => {
         (0, database_1.registerUser)("admin", "admin", types_1.UserType.Admin);
     });
