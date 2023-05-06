@@ -16,7 +16,7 @@ app.post("/register", async (req, res) => {
 
   //validating query
   if (!body.username || !body.password) {
-    res.status(400).send("No valid info");
+    res.status(400).send("Missing Info");
     return;
   }
 
@@ -25,10 +25,9 @@ app.post("/register", async (req, res) => {
     body.password,
     UserType.Business
   );
-  console.log(user);
 
   if (!user.ok) {
-    res.status(400).send("Problem with the user");
+    res.status(400).send("Unexpected server error");
     return;
   }
 
@@ -47,7 +46,7 @@ app.post("/login", async (req, res) => {
 
   //validating query
   if (!body.username || !body.password) {
-    res.status(400).send("Missing data");
+    res.status(400).send("Missing Info");
 
     return;
   }
@@ -56,17 +55,16 @@ app.post("/login", async (req, res) => {
 
   //user exists
   if (!user.ok) {
-    res.status(404).send("Invalid credentials");
+    res.status(400).send("Invalid Credentials");
     return;
   }
 
   //valid credentials
-  // ? whats this?
   if (
     user.res.username !== body.username ||
     user.res.password !== body.password
   ) {
-    res.sendStatus(400);
+    res.status(400).send("Invalid Credentials");
     return;
   }
 

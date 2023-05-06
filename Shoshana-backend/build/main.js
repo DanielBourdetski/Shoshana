@@ -17,13 +17,12 @@ app.post("/register", async (req, res) => {
     let body = req.body;
     //validating query
     if (!body.username || !body.password) {
-        res.status(400).send("No valid info");
+        res.status(400).send("Missing Info");
         return;
     }
     let user = await (0, database_1.registerUser)(body.username, body.password, types_1.UserType.Business);
-    console.log(user);
     if (!user.ok) {
-        res.status(400).send("Problem with the user");
+        res.status(400).send("Unexpected server error");
         return;
     }
     //sending jwt token
@@ -39,20 +38,19 @@ app.post("/login", async (req, res) => {
     console.log(body);
     //validating query
     if (!body.username || !body.password) {
-        res.status(400).send("Missing data");
+        res.status(400).send("Missing Info");
         return;
     }
     let user = await (0, database_1.getUserByUsername)(body.username);
     //user exists
     if (!user.ok) {
-        res.status(404).send("Invalid credentials");
+        res.status(400).send("Invalid Credentials");
         return;
     }
     //valid credentials
-    // ? whats this?
     if (user.res.username !== body.username ||
         user.res.password !== body.password) {
-        res.sendStatus(400);
+        res.status(400).send("Invalid Credentials");
         return;
     }
     //sending jwt token
