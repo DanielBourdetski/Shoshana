@@ -27,7 +27,7 @@ app.post("/register", async (req, res) => {
   );
 
   if (!user.ok) {
-    res.status(400).send("Unexpected server error");
+    res.status(400).send("Problem with the user");
     return;
   }
 

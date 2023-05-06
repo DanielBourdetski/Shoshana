@@ -22,7 +22,7 @@ app.post("/register", async (req, res) => {
     }
     let user = await (0, database_1.registerUser)(body.username, body.password, types_1.UserType.Business);
     if (!user.ok) {
-        res.status(400).send("Unexpected server error");
+        res.status(400).send("Problem with the user");
         return;
     }
     //sending jwt token
