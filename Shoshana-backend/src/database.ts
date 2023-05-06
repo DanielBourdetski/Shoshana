@@ -5,8 +5,9 @@ import {
   ObjectId,
   ServerApiVersion,
   WithId,
+  WithoutId,
 } from "mongodb";
-import { UserType } from "./types";
+import { Appointment, Business, UserType } from "./types";
 
 export type User = WithId<{
   username: string;
@@ -16,6 +17,7 @@ export type User = WithId<{
 
 let dbName = "test";
 let collectionUsers = "users";
+let collectionBusinesses = "businesses";
 
 let client: MongoClient;
 
@@ -56,9 +58,7 @@ export async function registerUser(
   //cheching if user with same username already exists
   let existingUser = await getUserByUsername(username);
 
-  if (existingUser.ok) {
-    return none(undefined);
-  }
+  if (existingUser.ok) return none(undefined);
 
   // inserting new user
   let res = await client
@@ -68,3 +68,31 @@ export async function registerUser(
 
   return some(res.insertedId);
 }
+
+// export async function createBusiness(userId: ObjectId, name: string): ResolvedPromise<Option<ObjectId>> {
+//   let business: Business = {
+//     userId: userId,
+//     name,
+//     appoinments: {},
+//   };
+
+//   let res = await client
+//     .db(dbName)
+//     .collection(collectionBusinesses)
+//     .insertOne(business);
+
+//   if (res.acknowledged === false) return none(undefined);
+
+//   return some(res.insertedId);
+// }
+
+// export async function createAppointment(businessId : ObjectId, appointment : WithoutId<Appointment>) : ResolvedPromise<Option<ObjectId>>
+// {
+  
+//   let field = appointment.date.year + "_" + appointment.date.month;
+
+//   let res = await client.db(dbName).collection(collectionBusinesses)
+//   .updateOne({_id: businessId}, { appointments : { $push : { field: appointment }  } });
+
+//   return some(res.upsertedId);
+// }

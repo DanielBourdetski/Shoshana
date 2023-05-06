@@ -1,6 +1,6 @@
-import { JWTToken, UserType } from "./types";
+import { JWTToken, UserType } from "../types";
 import type { Request, Response, NextFunction } from "express";
-import { verifyJWTToken } from "./jwt";
+import { verifyJWTToken } from "../jwt";
 
 /**
  * creates middleware function for express.
@@ -11,7 +11,7 @@ export function createAuthMiddleware(
   userTypes: UserType[]
 ): (
   req: Request,
-  res: Response & { jwtToken?: JWTToken },
+  res: Response & { jwtToken: JWTToken },
   next: NextFunction
 ) => void {
   return (req, res, next) => {
