@@ -1,5 +1,5 @@
 import { JWTToken, UserType } from "../types";
-import type { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction, RequestHandler} from "express";
 import { verifyJWTToken } from "../jwt";
 
 /**
@@ -7,55 +7,65 @@ import { verifyJWTToken } from "../jwt";
  * @param userType array of user types that can access the the next middleware after this one.
  * @return auth middleware function for express.
  */
+
+/*
+(
+	req: Request,
+	res: Response & { jwtToken: JWTToken },
+	next: NextFunction
+) => void
+
+*/
+
 export function createAuthMiddleware(
-  userTypes: UserType[]
+	userTypes: UserType[]
 ): (
-  req: Request,
-  res: Response & { jwtToken: JWTToken },
-  next: NextFunction
+	req: Request & { jwtToken: JWTToken },
+	res: Response,
+	next: NextFunction
 ) => void {
-  return (req, res, next) => {
-    if (!req.headers.authorization) {
-      // no token found
-      res.sendStatus(401);
-      return;
-    }
+	return (req, res, next) => {
+		if (!req.headers.authorization) {
+			// no token found
+			res.sendStatus(401);
+			return;
+		}
 
-    let [bearer, token] = req.headers.authorization.split(" ");
+		let [bearer, token] = req.headers.authorization.split(" ");
 
-    if (bearer != "Bearer") {
-      // not bearer token
-      res.sendStatus(401);
-      return;
-    }
+		if (bearer != "Bearer") {
+			// not bearer token
+			res.sendStatus(401);
+			return;
+		}
 
-    let resJwt = verifyJWTToken<JWTToken>(token);
+		let resJwt = verifyJWTToken<JWTToken>(token);
 
-    if (!resJwt.ok) {
-      // invalid token
-      res.sendStatus(401);
-      return;
-    }
+		if (!resJwt.ok) {
+			// invalid token
+			res.sendStatus(401);
+			return;
+		}
 
-    let jwtToken: JWTToken = resJwt.res.data;
+		let jwtToken: JWTToken = resJwt.res.data;
 
-    let foundUserType: boolean = false;
+		let foundUserType: boolean = false;
 
-    for (let i = 0; i < userTypes.length; i++) {
-      if (userTypes[i] === jwtToken.userType) {
-        foundUserType = true;
-        break;
-      }
-    }
+		for (let i = 0; i < userTypes.length; i++) {
+			if (userTypes[i] === jwtToken.userType) {
+				foundUserType = true;
+				break;
+			}
+		}
 
-    if (!foundUserType) {
-      // user auth incorrect
-      res.sendStatus(401);
-      return;
-    }
+		if (!foundUserType) {
+			// user auth incorrect
+			res.sendStatus(401);
+			return;
+		}
 
-    res.jwtToken = jwtToken;
+		req.jwtToken = jwtToken;
 
-    next();
-  };
+		next();
+	};
 }
