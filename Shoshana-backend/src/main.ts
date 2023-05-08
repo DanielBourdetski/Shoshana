@@ -1,5 +1,5 @@
 import Express from "express";
-import {loadDB, registerUser } from "./database";
+import { loadDB, registerUser } from "./database";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { UserType } from "./types";
@@ -14,20 +14,17 @@ app.use(bodyParser.json());
 app.use(authRouter);
 
 app.get("/business/:id", (req, res) => {
-
-  res.sendStatus(200);
+	res.sendStatus(200);
 });
 
-app.post("/business/create", (req, res) => {
-
-});
+app.post("/business/create", (req, res) => {});
 
 app.listen(port, () => {
-  loadDB("mongodb://127.0.0.1:27017")
-    .catch(console.dir)
-    .then(() => {
-      registerUser("admin", "admin", UserType.Admin);
-    });
+	loadDB("mongodb://127.0.0.1:27017")
+		.catch(console.dir)
+		.then(() => {
+			registerUser("admin", "admin", UserType.Admin);
+		});
 
-  console.log(`App listening on http://localhost:${port}`);
+	console.log(`App listening on http://localhost:${port}`);
 });

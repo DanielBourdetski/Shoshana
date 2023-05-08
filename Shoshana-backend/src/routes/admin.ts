@@ -1,12 +1,7 @@
-import {Router} from "express";
+import { Router } from "express";
 
 let router = Router();
 
-router.post("/login", (req, res) => {
+router.post("/login", (req, res) => {});
 
-});
-
-
-router.post("/logout", (req, res) => {
-
-});
+router.post("/logout", (req, res) => {});
