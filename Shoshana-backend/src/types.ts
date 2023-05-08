@@ -1,8 +1,8 @@
 import { ObjectId } from "mongodb";
 
 export enum UserType {
-    Admin = 6,
-    Business = 42
+    Admin = 69,
+    Business = 420
 }
 
 export type JWTToken = {
@@ -11,7 +11,6 @@ export type JWTToken = {
 }
 
 export type AppointmentDate = {
-    _id: ObjectId;
     year: number;
     month: number;
     day: number;
@@ -22,17 +21,14 @@ export type AppointmentDate = {
 }
 
 export type Appointment = {
-    _id: ObjectId;
     title: string;
     description: string;
     author: string;
     date: AppointmentDate;
 }
 
-export type BusinessAppointments = {[key: string] : Appointment[]}
-
 export type Business = {
     userId : ObjectId;
     name : string;
-    appoinments : BusinessAppointments;
+    appoinments : Appointment[];
 }

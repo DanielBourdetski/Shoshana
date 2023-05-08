@@ -1,19 +1,26 @@
 import {Router} from "express"
+import { createAuthMiddleware } from "../middleware/auth";
+import { UserType } from "../types";
 
 let router = Router();
 
-router.post("/login", (req, res) => {
-    
-})
+const authBusiness = createAuthMiddleware([UserType.Business, UserType.Admin]);
 
-router.post("/logout", (req, res) => {
-    
-})
-
-router.post("/register", (req, res) => {
-    
-})
-
+// read
 router.get("/business/[id]", (req, res) => {
     
+});
+
+router.post("/businesss", (req, res) => {
+
 })
+
+// write
+router.post('/business/[id]', (req, res) => {
+
+});
+
+// read business icon
+router.get("/business/icon/[id]", (req, res) => {
+
+});

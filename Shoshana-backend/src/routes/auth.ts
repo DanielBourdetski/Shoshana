@@ -3,26 +3,33 @@ import { generateJWTToken } from "../jwt";
 import { JWTToken, UserType } from "../types";
 import { none } from "topkek-utils";
 import { getUserByUsername, registerUser } from "../database";
+import { z } from "zod";
 
 const router = Router();
 
 enum RegisterError {
-    MissingBodyInfo = "MissingBodyInfo",
+    InvalidBodyInfo = "MissingBodyInfo",
     UsernameTaken = "UsernameTaken",
 }
 
+let registerScheme = z.object({
+    username : z.string(),
+    password: z.string()
+});
+
 router.post("/register", async (req, res) => {
-    let body = req.body as { username?: string; password?: string };
 
     //validating query
-    if (!body.username || !body.password) {
-        res.send(none(RegisterError.MissingBodyInfo));
+    let parsedValue = registerScheme.safeParse(req.body);
+
+    if (!parsedValue.success) {
+        res.send(none(RegisterError.InvalidBodyInfo));
         return;
     }
 
     let user = await registerUser(
-        body.username,
-        body.password,
+        parsedValue.data.username,
+        parsedValue.data.password,
         UserType.Business
     );
 
@@ -42,21 +49,25 @@ router.post("/register", async (req, res) => {
 });
 
 enum LoginError {
-    MissingBodyInfo = "MissingBodyInfo",
+    InvalidBodyInfo = "MissingBodyInfo",
     InvalidUsernameOrPassword = "InvalidUsernameOrPassword"
 }
 
+let loginScheme = z.object({
+    username : z.string(),
+    password: z.string()
+});
+
 router.post("/login", async (req, res) => {
-    let body = req.body as { username?: string; password?: string };
-    console.log(body);
+    let loginData = loginScheme.safeParse(req.body);
 
     //validating query
-    if (!body.username || !body.password) {
-        res.send(none(LoginError.MissingBodyInfo));
+    if (!loginData.success) {
+        res.send(none(LoginError.InvalidBodyInfo));
         return;
     }
 
-    let user = await getUserByUsername(body.username);
+    let user = await getUserByUsername(loginData.data.username);
 
     //user exists
     if (!user.ok) {
@@ -65,7 +76,7 @@ router.post("/login", async (req, res) => {
     }
 
     //valid credentials
-    if (user.res.password !== body.password) {
+    if (user.res.password !== loginData.data.password) {
         res.send(none(LoginError.InvalidUsernameOrPassword));
         return;
     }
