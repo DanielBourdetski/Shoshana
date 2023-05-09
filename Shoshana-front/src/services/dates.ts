@@ -66,3 +66,16 @@ export function getIntervals(
 
   return intervals;
 }
+
+export function DateTimeToObject(dateTime: DateTime) {
+  const { year, month, day, hour, minute } = dateTime;
+  return {
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    hourDiff: Math.floor(dateTime.offset / 60),
+    minuteDiff: dateTime.offset % 60,
+  };
+}
