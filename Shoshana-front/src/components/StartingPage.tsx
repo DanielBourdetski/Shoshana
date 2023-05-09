@@ -1,14 +1,17 @@
 import { FormEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux/es/exports";
 import authService from "../services/authService";
 import type { RootState } from "../store/store";
+import Login from "./auth/Login";
+import Registration from "./auth/registration/Registration";
 
 const StartingPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+  const formType = useParams().formType as "login" | "register";
 
   const userIsLoggedIn = useSelector(
     (state: RootState) => state.general.isLoggedIn
@@ -33,46 +36,14 @@ const StartingPage = () => {
     navigate("/manager");
   };
 
-  const cancelRefresh = (e: FormEvent) => e.preventDefault();
-
   return (
-    <form
-      onSubmit={cancelRefresh}
-      className="flex flex-col gap-4 w-1/3 mx-auto mt-40"
-    >
-      <label htmlFor="username">Username</label>
-      <input
-        className="p-2 border border-black rounded"
-        value={username}
-        name="username"
-        type="text"
-        onChange={(e) => setUsername(e.target.value)}
-      />
-
-      <label htmlFor="password">Password</label>
-      <input
-        className="p-2 border border-black rounded"
-        value={password}
-        name="password"
-        type="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <div className="flex p-2 w-1/3 mx-auto justify-between">
-        <button
-          className="p-1 px-3 mx-1 border border-slate-800 rounded"
-          onClick={onLogin}
-        >
-          Login
-        </button>
-        <button
-          className="p-1 px-3 mx-1 border border-slate-800 rounded"
-          onClick={onRegister}
-        >
-          Register
-        </button>
-      </div>
-    </form>
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <h1 className="text-4xl mb-10">
+        {formType === "login" ? "Login" : "Register"}
+      </h1>
+      {formType === "login" && <Login />}
+      {formType === "register" && <Registration />}
+    </div>
   );
 };
 
