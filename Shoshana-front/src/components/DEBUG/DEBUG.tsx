@@ -19,7 +19,7 @@ const DEBUG = () => {
   };
 
   const onFastLogin = () => {
-    dispatch(generalActions.login({ username: "Admin", id: "1" }));
+    dispatch(generalActions.login({ username: "DEBUG" }));
     navigate("/manager");
   };
 
@@ -45,8 +45,9 @@ const DEBUG = () => {
       </div>
 
       <div className="col">
-        <div>username: {loggedUser?.username || "null"}</div>
-        <div>id : {loggedUser?.id || "null"}</div>
+        <div>
+          username: {loggedUser?.username ? loggedUser.username : "null"}
+        </div>
       </div>
     </div>
   );
