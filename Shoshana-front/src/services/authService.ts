@@ -29,7 +29,7 @@ const authService: AuthService = {
 
     try {
       const loginResponse = await httpService.post(
-        "http://localhost:3000/login",
+        "http://localhost:3000/auth/login",
         {
           username,
           password,
@@ -58,7 +58,7 @@ const authService: AuthService = {
 
     try {
       const registerResponse = await httpService.post(
-        "http://localhost:3000/register",
+        "http://localhost:3000/auth/register",
         {
           username,
           password,
