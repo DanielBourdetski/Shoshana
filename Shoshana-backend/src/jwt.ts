@@ -8,7 +8,7 @@ export type TokenPayload<T> = {
 
 /**
  * @param token bearer token, not parsed.
- * @returns if parsed successfully returns the token playload, else returns error string.
+ * @return if parsed successfully returns the token playload, else returns error string.
  * @example varifyJWTToken<{username: string}>("1asd123.1231dasd.12312edasd");
  */
 export function verifyJWTToken<T>(

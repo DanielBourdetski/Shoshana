@@ -11,7 +11,7 @@ const port = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(authRouter);
+app.use("/auth", authRouter);
 
 app.get("/business/:id", (req, res) => {
 	res.sendStatus(200);

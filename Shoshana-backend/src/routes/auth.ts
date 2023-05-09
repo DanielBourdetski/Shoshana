@@ -22,14 +22,16 @@ export enum RegisterError {
 }
 
 export const registerValidationScheme = z.object({
-	username: z.string(),
-	password: z.string(),
+	username: z.string().min(3).max(50),
+
+	password: z.string().min(8).max(50),
 	email: z.string(),
 	fullName: z.string(),
 	businessName: z.string(),
 	address: z.string(),
 	phoneNumbers: z.object({ private: z.string(), public: z.string() }),
-	logo: z.instanceof(Uint8Array),
+	// logo: z.instanceof(Uint8Array),
+	logo: z.string(),
 });
 
 router.post("/register", async (req, res) => {
@@ -54,13 +56,13 @@ router.post("/register", async (req, res) => {
 	}
 
 	// saving logo of the business
-	let image = await createImage(parsedValue.data.logo);
+	// let image = await createImage(parsedValue.data.logo);
 
-	if (!image.ok) {
-		deleteUser(user.res);
-		res.send(none(RegisterError.Unknown));
-		return;
-	}
+	// if (!image.ok) {
+	// 	deleteUser(user.res);
+	// 	res.send(none(RegisterError.Unknown));
+	// 	return;
+	// }
 
 	// saving business data
 	let newBusiness = {
@@ -69,14 +71,14 @@ router.post("/register", async (req, res) => {
 		businessName: parsedValue.data.businessName,
 		ownerId: user.res,
 		phoneNumber: parsedValue.data.phoneNumbers,
-		logo: image.res,
+		logo: parsedValue.data.logo,
 	};
 
 	let business = await createBusiness(newBusiness);
 
 	if (!business.ok) {
 		deleteUser(user.res);
-		deleteImage(image.res);
+		// deleteImage(image.res);
 		res.send(none(RegisterError.Unknown));
 		return;
 	}
@@ -88,7 +90,7 @@ router.post("/register", async (req, res) => {
 			userId: user.res.toString(),
 			businessId: business.res.toString(),
 		}),
-		
+
 		business: newBusiness,
 	});
 });
