@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import useLocale from "../../../hooks/useLocale";
 import calendarService from "../../../services/calendarService";
-import MonthDay from "./MonthDay";
+import Day from "./Day";
 import DayDetails from "../DayDetails";
 import { DateTime } from "luxon";
 import { getMonthDays } from "../../../services/dates";
@@ -49,7 +49,7 @@ const Month = () => {
           const apps = appointments.filter((a) => a.dateUTC.day === day.day);
 
           return (
-            <MonthDay
+            <Day
               key={day.toUnixInteger()}
               day={day}
               openDay={() => setDate(day)}
