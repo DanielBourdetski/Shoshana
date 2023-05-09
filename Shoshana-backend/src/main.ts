@@ -1,5 +1,6 @@
 import Express from "express";
-import { loadDB, registerUser } from "./database";
+import mongoose from "mongoose";
+import { registerUser } from "./database";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { UserType } from "./types";
@@ -19,12 +20,11 @@ app.get("/business/:id", (req, res) => {
 
 app.post("/business/create", (req, res) => {});
 
-app.listen(port, () => {
-	loadDB("mongodb://127.0.0.1:27017")
-		.catch(console.dir)
-		.then(() => {
-			registerUser("admin", "admin", UserType.Admin);
-		});
+mongoose
+	.connect("mongodb://localhost:27017/shoshana")
+	.then(() => console.log("Connected to MognoDB"))
+	.catch(() => console.error("MongoDB connection error"));
 
-	console.log(`App listening on http://localhost:${port}`);
+app.listen(port, () => {
+	console.log(`Successfuly connected to http://localhost:${port}`);
 });
