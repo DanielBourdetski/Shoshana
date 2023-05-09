@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-type User = { username: string; id: string };
+type User = { username: string };
 
 interface GeneralState {
   isLoggedIn: boolean;
@@ -9,7 +9,7 @@ interface GeneralState {
 }
 
 const initialState: GeneralState = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   user: null,
 };
 
@@ -18,8 +18,8 @@ export const generalSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action: PayloadAction<User>) => {
-      const { username, id } = action.payload;
-      state.user = { username, id };
+      const { username } = action.payload;
+      state.user = { username };
       state.isLoggedIn = true;
     },
 

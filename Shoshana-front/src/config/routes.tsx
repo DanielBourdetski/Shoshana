@@ -1,5 +1,5 @@
 import StartingPage from "../components/StartingPage";
-import { Route } from "react-router-dom";
+import { Route, Navigate } from "react-router-dom";
 import AuthGuard from "../components/AuthGuard";
 import ManagerPage from "../components/manager/ManagerPage";
 import Month from "../components/calendar/month/Month";
@@ -8,8 +8,9 @@ import Week from "../components/calendar/week/Week";
 import Calendar from "../components/calendar/Calendar";
 
 const routes = [
+  // ! on route / no route is detected
   {
-    path: "/",
+    path: "auth/:formType",
     Element: StartingPage,
     protected: false,
   },
@@ -24,6 +25,12 @@ const routes = [
     path: "/calendar/*",
     Element: Calendar,
     protected: true,
+  },
+
+  {
+    path: "/",
+    Element: () => <Navigate to="/calendar" />,
+    protected: false,
   },
 ];
 
