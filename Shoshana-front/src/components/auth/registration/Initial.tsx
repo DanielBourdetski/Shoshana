@@ -1,6 +1,6 @@
 import React, { FormEventHandler } from "react";
 import { Link } from "react-router-dom";
-import Input from "../../calendar/common/Input";
+import Input from "../../common/Input";
 import toaster from "../../../helpers/toaster";
 import {
   validatePassword,

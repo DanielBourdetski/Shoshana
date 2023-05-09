@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { generalActions } from "../../store/store";
 import { toast } from "react-toastify";
 import toaster from "../../helpers/toaster";
-import Input from "../calendar/common/Input";
+import Input from "../common/Input";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({

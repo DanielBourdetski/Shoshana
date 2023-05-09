@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Input from "../../calendar/common/Input";
+import Input from "../../common/Input";
 
 const DataRegistration = () => {
   const [credentials, setCredentials] = useState({
