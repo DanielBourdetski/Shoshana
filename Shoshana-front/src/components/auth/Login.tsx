@@ -3,9 +3,10 @@ import authService from "../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { generalActions } from "../../store/store";
-import { toast } from "react-toastify";
 import toaster from "../../helpers/toaster";
 import Input from "../common/Input";
+import Button from "../common/Button";
+import localService from "../../services/localService";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -16,7 +17,12 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = async (e: FormEvent) => {
+  const updateFieldInState = (value: string, field: "username" | "password") =>
+    setCredentials((ps) => {
+      return { ...ps, [field]: value };
+    });
+
+  const onLogin = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
@@ -29,7 +35,11 @@ const Login = () => {
         throw new Error(userData.res);
       }
 
-      dispatch(generalActions.login({ username }));
+      localService.saveToken(userData.res);
+      dispatch(generalActions.login(username));
+
+      toaster.success("Login Successful");
+
       navigate("/");
     } catch (err: any) {
       toaster.authError(err.message);
@@ -39,36 +49,23 @@ const Login = () => {
 
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={onLogin}
       className="flex flex-col justify-center items-center h-full"
     >
       <Input
         label="Username"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setCredentials((ps) => {
-            return { ...ps, username: e.target.value };
-          })
-        }
+        onChange={(value: string) => updateFieldInState(value, "username")}
         value={credentials.username}
       />
 
       <Input
         label="Password"
         password
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setCredentials((ps) => {
-            return { ...ps, password: e.target.value };
-          })
-        }
+        onChange={(value: string) => updateFieldInState(value, "password")}
         value={credentials.password}
       />
 
-      <button
-        className="p-1 px-4 my-2 border border-slate-600 rounded hover:bg-slate-200 duration-150"
-        type="submit"
-      >
-        LOGIN
-      </button>
+      <Button title="LOGIN" submit />
       <Link
         to={"/auth/register"}
         className="underline-offset-[-4px] hover:underline hover:underline-offset-[2px] duration-200"

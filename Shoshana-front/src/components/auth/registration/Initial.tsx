@@ -39,6 +39,15 @@ const Initial: React.FC<Initial> = ({
     onNextStage(e);
   };
 
+  const updateField = (
+    e: string,
+    field: "username" | "password" | "repeatPassword"
+  ) => {
+    setCredentials((ps) => {
+      return { ...ps, [field]: e };
+    });
+  };
+
   return (
     <form
       onSubmit={handleNextStage}
@@ -46,33 +55,21 @@ const Initial: React.FC<Initial> = ({
     >
       <Input
         label="Username"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setCredentials((ps) => {
-            return { ...ps, username: e.target.value };
-          })
-        }
+        onChange={(value: string) => updateField(value, "username")}
         value={credentials.username}
       />
 
       <Input
         label="Password"
         password
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setCredentials((ps) => {
-            return { ...ps, password: e.target.value };
-          })
-        }
+        onChange={(value: string) => updateField(value, "password")}
         value={credentials.password}
       />
 
       <Input
         label="Repeat Password"
         password
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setCredentials((ps) => {
-            return { ...ps, repeatPassword: e.target.value };
-          })
-        }
+        onChange={(value: string) => updateField(value, "repeatPassword")}
         value={credentials.repeatPassword}
       />
 

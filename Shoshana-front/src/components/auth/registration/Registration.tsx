@@ -3,6 +3,11 @@ import authService from "../../../services/authService";
 import Initial from "./Initial";
 import DataRegistration from "./DataRegistration";
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
+import toaster from "../../../helpers/toaster";
+import localService from "../../../services/localService";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { generalActions } from "../../../store/store";
 
 const Registration = () => {
   const [stage, setStage] = useState(0);
@@ -12,11 +17,19 @@ const Registration = () => {
     repeatPassword: "",
   });
 
-  const [businessData, setBusinessData] = useState({
-    name: "",
+  const [bizCredentials, setBizCredentials] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    business: "",
     address: "",
-    type: "", // think about how to manage/add/handle types of businesses
+    privateNum: "",
+    businessNum: "",
+    logo: "",
   });
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const nextStage = () => {
     if (stage < 2) setStage((cs) => cs + 1);
@@ -26,33 +39,44 @@ const Registration = () => {
     if (stage > 0) setStage((cs) => cs - 1);
   };
 
+  const headerRender = ["User Info", "Business Info"];
+
+  const handleRegistration = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const registerRes = await authService.register({
+      ...credentials,
+      ...bizCredentials,
+    });
+
+    if (!registerRes.ok) return toaster.authError(registerRes.res);
+
+    localService.saveToken(registerRes.res);
+    toaster.success("Registration Completed!");
+
+    dispatch(generalActions.login(credentials.username));
+
+    navigate("/");
+  };
+
   const stageRender = [
     <Initial
       credentials={credentials}
       setCredentials={setCredentials}
       onNextStage={nextStage}
     />,
-    <DataRegistration />,
+    <DataRegistration
+      onRegistration={handleRegistration}
+      credentials={bizCredentials}
+      setCredentials={setBizCredentials}
+    />,
   ];
-
-  const headerRender = ["User Info", "Business Info"];
-
-  const onRegistration = async (e: FormEvent) => {
-    e.preventDefault();
-
-    const { username, password } = credentials;
-
-    const registerRes = await authService.register(username, password);
-    // if (!registerRes.ok) return toast.error("registerRes.res");
-    console.log(registerRes);
-    // TODO handle successful/failed register response
-  };
 
   // TODO extract stage arrows into a seperate component
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="flex justify-center items-center mb-10">
+    <div className="flex flex-col items-center justify-center w-full h-full">
+      <div className="flex justify-center items-center">
         <div className="rounded-full flex justify-center items-center">
           <BsArrowLeftCircle
             size={30}
