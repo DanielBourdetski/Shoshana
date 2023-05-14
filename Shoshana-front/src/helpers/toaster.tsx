@@ -41,6 +41,16 @@ class Toaster {
       },
     });
   }
+
+  public success(msg: string): void {
+    toast.success(msg, {
+      autoClose: 1500,
+      style: {
+        textAlign: "center",
+        padding: 10,
+      },
+    });
+  }
 }
 
 export default Toaster.getInstance();
