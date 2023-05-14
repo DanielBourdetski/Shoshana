@@ -1,19 +1,15 @@
 import { Router } from "express";
-import { createAuthMiddleware } from "../middleware/auth";
+// import { createAuthMiddleware } from "../middleware/auth";
 import { UserType } from "../types";
 
 let router = Router();
 
-const authBusiness = createAuthMiddleware([UserType.Business, UserType.Admin]);
+// const authBusiness = createAuthMiddleware([UserType.Business, UserType.Admin]);
 
 // read
-router.get("/business/[id]", (req, res) => {
+router.get("/business/[id]", (req, res) => {});
 
-});
-
-router.get("/business", (req, res) => {
-
-})
+router.get("/business", (req, res) => {});
 
 router.post("/businesss", (req, res) => {});
 

@@ -1,10 +1,10 @@
 import Express from "express";
 import mongoose from "mongoose";
-import { registerUser } from "./database";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { UserType } from "./types";
 import authRouter from "./routes/auth";
+import TESTRouter from "./routes/TEST";
+import Business from "./models/business";
 
 const app = Express();
 const port = 3000;
@@ -13,12 +13,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use("/auth", authRouter);
-
-app.get("/business/:id", (req, res) => {
-	res.sendStatus(200);
-});
-
-app.post("/business/create", (req, res) => {});
+app.use("/test", TESTRouter);
 
 mongoose
 	.connect("mongodb://localhost:27017/shoshana")

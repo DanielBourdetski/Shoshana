@@ -1,24 +1,15 @@
 import { Router } from "express";
 import { generateJWTToken } from "../jwt";
-import { JWTToken, UserType } from "../types";
-import { none } from "topkek-utils";
-import {
-	createBusiness,
-	createImage,
-	deleteImage,
-	deleteUser,
-	getBussinessByOwnerId,
-	getUserByUsername,
-	registerUser,
-} from "../database";
 import { z } from "zod";
+import Business from "../models/business";
 
 const router = Router();
 
 export enum RegisterError {
-	Unknown = "Unknown",
-	InvalidBodyInfo = "MissingBodyInfo",
-	UsernameTaken = "UsernameTaken",
+	Unknown = "Unexpected Server Error",
+	InvalidInfo = "Invalid Info",
+	UsernameTaken = "Username Taken",
+	EmailTaken = "Email Taken",
 }
 
 export const registerValidationScheme = z.object({
@@ -26,79 +17,68 @@ export const registerValidationScheme = z.object({
 
 	password: z.string().min(8).max(50),
 	email: z.string(),
-	fullName: z.string(),
+	name: z.object({
+		first: z.string(),
+		last: z.string(),
+	}),
 	businessName: z.string(),
 	address: z.string(),
 	phoneNumbers: z.object({ private: z.string(), public: z.string() }),
-	// logo: z.instanceof(Uint8Array),
 	logo: z.string(),
 });
 
 router.post("/register", async (req, res) => {
-	//validating query
-	let parsedValue = registerValidationScheme.safeParse(req.body);
+	// console.log(req.body);
 
-	if (!parsedValue.success) {
-		res.send(none(RegisterError.InvalidBodyInfo));
-		return;
+	let registerData = registerValidationScheme.safeParse(req.body);
+
+	if (!registerData.success) {
+		console.log(registerData.error.formErrors);
+
+		return res.status(422).send(RegisterError.InvalidInfo);
 	}
 
-	// try registering
-	let user = await registerUser(
-		parsedValue.data.username,
-		parsedValue.data.password,
-		UserType.Business
-	);
-
-	if (!user.ok) {
-		res.send(none(RegisterError.UsernameTaken));
-		return;
-	}
-
-	// saving logo of the business
-	// let image = await createImage(parsedValue.data.logo);
-
-	// if (!image.ok) {
-	// 	deleteUser(user.res);
-	// 	res.send(none(RegisterError.Unknown));
-	// 	return;
-	// }
-
-	// saving business data
-	let newBusiness = {
-		address: parsedValue.data.address,
-		appointments: [],
-		businessName: parsedValue.data.businessName,
-		ownerId: user.res,
-		phoneNumber: parsedValue.data.phoneNumbers,
-		logo: parsedValue.data.logo,
-	};
-
-	let business = await createBusiness(newBusiness);
-
-	if (!business.ok) {
-		deleteUser(user.res);
-		// deleteImage(image.res);
-		res.send(none(RegisterError.Unknown));
-		return;
-	}
-
-	//sending jwt token
-	res.send({
-		token: generateJWTToken<JWTToken>({
-			userType: UserType.Business,
-			userId: user.res.toString(),
-			businessId: business.res.toString(),
-		}),
-
-		business: newBusiness,
+	const existingUsername = await Business.findOne({
+		username: registerData.data.username,
 	});
+
+	if (existingUsername) {
+		return res.status(409).send(RegisterError.UsernameTaken);
+	}
+
+	const existingEmail = await Business.findOne({
+		email: registerData.data.email,
+	});
+
+	if (existingEmail) {
+		return res.status(409).send(RegisterError.EmailTaken);
+	}
+
+	try {
+		const business = new Business(registerData.data);
+		await business.save();
+
+		if (!business.username)
+			throw new Error(
+				"Unexpected: no username on saved business on database"
+			);
+
+		return res.status(201).send({
+			token: generateJWTToken({
+				username: business.username,
+				isAdmin: business.isAdmin,
+			}),
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).send(RegisterError.Unknown);
+	}
 });
 
 export enum LoginError {
 	Unknown = "Unknown",
-	InvalidBodyInfo = "MissingBodyInfo",
-	InvalidUsernameOrPassword = "InvalidUsernameOrPassword",
+	InvalidInfo = "Invalid Info",
+	InvalidUsernameOrPassword = "Invalid Credentials",
 }
 
 export const loginValidationScheme = z.object({
@@ -109,39 +89,27 @@ export const loginValidationScheme = z.object({
 router.post("/login", async (req, res) => {
 	let loginData = loginValidationScheme.safeParse(req.body);
 
-	//validating query
 	if (!loginData.success) {
-		res.send(none(LoginError.InvalidBodyInfo));
-		return;
+		return res.status(400).send(LoginError.InvalidUsernameOrPassword);
 	}
 
-	let user = await getUserByUsername(loginData.data.username);
+	const { username, password } = loginData.data;
 
-	//user exists
-	if (!user.ok) {
-		res.send(none(LoginError.InvalidUsernameOrPassword));
-		return;
+	const user = await Business.findOne({ username, password });
+
+	if (!user) {
+		return res.status(422).send(LoginError.InvalidUsernameOrPassword);
 	}
 
-	//valid credentials
-	if (user.res.password !== loginData.data.password) {
-		res.send(none(LoginError.InvalidUsernameOrPassword));
-		return;
-	}
+	if (!user.username)
+		return res
+			.status(500)
+			.send("Unexpected error: no username saved on user account");
 
-	let business = await getBussinessByOwnerId(user.res._id);
-
-	if (!business.ok) {
-		res.send(none(LoginError.Unknown));
-		return;
-	}
-
-	//sending jwt token
 	res.send({
-		token: generateJWTToken<JWTToken>({
-			userType: user.res.userType,
-			userId: user.res._id.toString(),
-			businessId: business.res._id.toString(),
+		token: generateJWTToken({
+			username: user.username,
+			isAdmin: user.isAdmin,
 		}),
 	});
 });
