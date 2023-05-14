@@ -5,6 +5,8 @@ import DEBUG from "./components/DEBUG/DEBUG";
 import { routesArr } from "./config/routes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
 
 function App() {
   const [debug, setDebug] = useState(true);
@@ -23,7 +25,7 @@ function App() {
 
   return (
     <>
-      <div className="w-full h-full p-4 overflow-y-auto">
+      <div className="w-full h-screen p-4">
         <ToastContainer limit={3} position="bottom-center" />
         <Routes>{routesArr}</Routes>
         {debug && <DEBUG />}
