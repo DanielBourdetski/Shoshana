@@ -6,7 +6,6 @@ import { routesArr } from "./config/routes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NavBar from "./components/navBar/NavBar";
-
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 
@@ -29,6 +28,7 @@ function App() {
   return (
     <>
       <div className="w-full h-full p-4 overflow-y-auto">
+        {isItlogIn && <NavBar />}
         <ToastContainer limit={3} position="bottom-center" />
         <Routes>{routesArr}</Routes>
         {debug && <DEBUG />}
