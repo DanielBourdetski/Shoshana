@@ -2,6 +2,18 @@ import store, { generalActions } from "../store/store";
 import httpService from "./httpService";
 
 type UserData = { ok: boolean; res: string };
+type RegistrationData = {
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  business: string;
+  address: string;
+  privateNum: string;
+  businessNum: string;
+  logo: string;
+};
 
 interface AuthService {
   login: (
@@ -9,15 +21,9 @@ interface AuthService {
     password: string,
     DEBUG?: boolean
   ) => Promise<UserData>;
-  register: (
-    username: string,
-    password: string,
-    DEBUG?: boolean
-  ) => Promise<any>;
+  register: (userData: RegistrationData, DEBUG?: boolean) => Promise<any>;
   isLoggedIn: () => boolean;
 }
-
-const { general } = store.getState();
 
 const authService: AuthService = {
   login: async (username, password, DEBUG = false): Promise<any> => {
@@ -49,20 +55,51 @@ const authService: AuthService = {
     }
   },
 
-  register: async (username, password, DEBUG = false): Promise<any> => {
-    const user = JSON.stringify({ username, id: "1" });
-    localStorage.setItem("users", user);
+  register: async (
+    userData,
+    DEBUG = false
+  ): Promise<{ ok: boolean; res: string }> => {
+    // TODO convert these 2 lines to be applied on registration
+    // const user = JSON.stringify({ username, id: "1" });
+    // localStorage.setItem("users", user);
 
     // replacement for an unsuccessful register call
-    if (DEBUG) return { error: "some error" };
+    if (DEBUG) return { ok: false, res: "some error" };
+
+    const {
+      username,
+      password,
+      email,
+      firstName,
+      lastName,
+      business,
+      address,
+      businessNum,
+      privateNum,
+      logo,
+    } = userData;
+
+    const formattedUserData = {
+      username,
+      password,
+      email,
+      name: {
+        first: firstName,
+        last: lastName,
+      },
+      businessName: business,
+      address,
+      phoneNumbers: {
+        private: privateNum,
+        public: businessNum,
+      },
+      logo,
+    };
 
     try {
       const registerResponse = await httpService.post(
         "http://localhost:3000/auth/register",
-        {
-          username,
-          password,
-        }
+        formattedUserData
       );
 
       // ? might need to be moved to another place
