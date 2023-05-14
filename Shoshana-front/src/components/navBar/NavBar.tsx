@@ -7,6 +7,8 @@ import { GrClose } from "react-icons/gr";
 
 export default function navBar() {
   const navigate_To = useNavigate();
+  
+  // add navLink
 
   // switching between is icons and open nav bar in mobile mode
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
