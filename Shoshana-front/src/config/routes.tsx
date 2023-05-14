@@ -42,17 +42,17 @@ const calendarRoutes = [
 
 // TODO there is a built-in "configure routes from data" method in react-router, implement it
 
-export const routesArr = routes.map((r, i) => {
-  if (r.protected)
+export const routesArr = routes.map((route, i) => {
+  if (route.protected)
     return (
       <Route
         key={i}
-        path={r.path}
-        element={<AuthGuard Component={r.Element} />}
+        path={route.path}
+        element={<AuthGuard Component={route.Element} />}
       />
     );
 
-  return <Route key={i} path={r.path} element={<r.Element />} />;
+  return <Route key={i} path={route.path} element={<route.Element />} />;
 });
 
 export default { routes, calendarRoutes };
