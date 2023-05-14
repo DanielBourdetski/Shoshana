@@ -1,13 +1,11 @@
-import React, { useState, useRef } from "react";
-import { useNavigate, NavLink } from "react-router-dom";
+import React, { useState} from "react";
+import {NavLink } from "react-router-dom";
 import { CgMenu } from "react-icons/cg";
 import { GrClose } from "react-icons/gr";
 
 // TODO add path in navigate function
 
 export default function navBar() {
-  const navigate = useNavigate();
-
   // toggling menu and hamburger icon on small screenss
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
