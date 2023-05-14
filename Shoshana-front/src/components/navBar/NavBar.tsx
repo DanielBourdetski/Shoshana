@@ -6,11 +6,9 @@ import { GrClose } from "react-icons/gr";
 // TODO add path in navigate function
 
 export default function navBar() {
-  const navigate_To = useNavigate();
-  
-  // add navLink
+  const navigate = useNavigate();
 
-  // switching between is icons and open nav bar in mobile mode
+  // toggling menu and hamburger icon on small screenss
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -35,7 +33,7 @@ export default function navBar() {
           <li className="mx-4 my-6 md:my-0">
             <button
               className="text-x1 hover:text-cyan-500 duration-500"
-              onClick={() => navigate_To("/")}
+              onClick={() => navigate("/")}
             >
               HOME
             </button>
@@ -44,7 +42,7 @@ export default function navBar() {
           <li className="mx-4 my-6 md:my-0">
             <button
               className="text-x1 hover:text-cyan-500 duration-500"
-              onClick={() => navigate_To("/")}
+              onClick={() => navigate("/")}
             >
               ABOUT
             </button>
@@ -53,7 +51,7 @@ export default function navBar() {
           <li className="mx-4 my-6 md:my-0">
             <button
               className="text-x1 hover:text-cyan-500 duration-500"
-              onClick={() => navigate_To("/")}
+              onClick={() => navigate("/")}
             >
               SiGN OUT
             </button>
