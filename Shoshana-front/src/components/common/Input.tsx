@@ -40,7 +40,7 @@ const Input: React.FC<InputProps> = ({
           type={password ? "password" : "text"}
           onFocus={() => setInputIsFocused(true)}
           onBlur={() => (value ? null : setInputIsFocused(false))}
-          onChange={(e) => onChange(e)}
+          onChange={(e) => onChange(e.target.value)}
           value={value}
         />
       </div>
