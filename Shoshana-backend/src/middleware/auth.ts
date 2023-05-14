@@ -1,71 +1,64 @@
-import { JWTToken, UserType } from "../types";
-import type { Request, Response, NextFunction, RequestHandler} from "express";
+import { ObjectId } from "mongoose";
+import type { Request, Response, NextFunction, RequestHandler } from "express";
 import { verifyJWTToken } from "../jwt";
+import Business, { IBusiness } from "../models/business";
 
-/**
- * creates middleware function for express.
- * @param userType array of user types that can access the the next middleware after this one.
- * @return auth middleware function for express.
- */
+interface AuthRequest extends Request {
+	user?: IBusiness;
+}
 
-/*
-(
-	req: Request,
-	res: Response & { jwtToken: JWTToken },
-	next: NextFunction
-) => void
-
-*/
-
-export function createAuthMiddleware(
-	userTypes: UserType[]
-): (
-	req: Request & { jwtToken: JWTToken },
+export const auth = async (
+	req: AuthRequest,
 	res: Response,
 	next: NextFunction
-) => void {
-	return (req, res, next) => {
-		if (!req.headers.authorization) {
-			// no token found
-			res.sendStatus(401);
-			return;
-		}
+) => {
+	const authHeader = req.headers.authorization;
 
-		let [bearer, token] = req.headers.authorization.split(" ");
+	if (!authHeader) {
+		return res.status(401).send("Unauthorized");
+	}
 
-		if (bearer != "Bearer") {
-			// not bearer token
-			res.sendStatus(401);
-			return;
-		}
+	// Split the header value into an array to get the token
+	const [authType, token] = authHeader.split(" ");
 
-		let resJwt = verifyJWTToken<JWTToken>(token);
+	// Check if the authorization type is not Bearer
+	if (authType !== "Bearer") {
+		return res.status(401).send("Unauthorized");
+	}
 
-		if (!resJwt.ok) {
-			// invalid token
-			res.sendStatus(401);
-			return;
-		}
+	const tokenData = verifyJWTToken(token);
+	const user = await Business.findById(tokenData.userId);
 
-		let jwtToken: JWTToken = resJwt.res.data;
+	if (!user) return res.status(400).send("Invalid User Id");
 
-		let foundUserType: boolean = false;
+	req.user = user;
+	next();
+};
 
-		for (let i = 0; i < userTypes.length; i++) {
-			if (userTypes[i] === jwtToken.userType) {
-				foundUserType = true;
-				break;
-			}
-		}
+export const adminAuth = async (
+	req: AuthRequest,
+	res: Response,
+	next: NextFunction
+) => {
+	const authHeader = req.headers.authorization;
 
-		if (!foundUserType) {
-			// user auth incorrect
-			res.sendStatus(401);
-			return;
-		}
+	if (!authHeader) {
+		return res.status(401).send("Unauthorized");
+	}
 
-		req.jwtToken = jwtToken;
+	const [authType, token] = authHeader.split(" ");
 
-		next();
-	};
-}
+	if (authType !== "Bearer") {
+		return res.status(401).send("Unauthorized");
+	}
+
+	const tokenData = verifyJWTToken(token);
+	const user = await Business.findById(tokenData.userId);
+
+	if (!user) return res.status(400).send("Invalid User Id");
+
+	if (!user.isAdmin) return res.status(401).send("Unauthorized");
+
+	req.user = user;
+	next();
+};
