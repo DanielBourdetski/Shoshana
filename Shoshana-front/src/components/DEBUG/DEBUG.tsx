@@ -5,9 +5,10 @@ import { generalActions } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../../store/store";
 import VIEW from "./VIEW";
+import toaster from "../../helpers/toaster";
 
 const DEBUG = () => {
-  const { isLoggedIn, user: loggedUser } = useSelector(
+  const { isLoggedIn, username: username } = useSelector(
     (state: RootState) => state.general
   );
   const dispatch = useDispatch();
@@ -18,9 +19,18 @@ const DEBUG = () => {
     navigate("/");
   };
 
-  const onFastLogin = () => {
-    dispatch(generalActions.login({ username: "DEBUG" }));
-    navigate("/manager");
+  const onFastLogin = async () => {
+    try {
+      const loginData = await authService.login("admin", "admin");
+      if (!loginData.ok) throw new Error("Unexpected error on fast login");
+
+      toaster.success("Fast login successful");
+
+      dispatch(generalActions.login("admin"));
+      navigate("/");
+    } catch (err: any) {
+      toaster.authError(err.message);
+    }
   };
 
   return (
@@ -45,9 +55,7 @@ const DEBUG = () => {
       </div>
 
       <div className="col">
-        <div>
-          username: {loggedUser?.username ? loggedUser.username : "null"}
-        </div>
+        <div>username: {username ? username : "null"}</div>
       </div>
     </div>
   );
