@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
 import authRouter from "./routes/auth";
+import appointmentRouter from "./routes/appointmets";
 import TESTRouter from "./routes/TEST";
 import Business from "./models/business";
 
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use("/auth", authRouter);
+app.use("/appointment", appointmentRouter);
 app.use("/test", TESTRouter);
 
 mongoose
