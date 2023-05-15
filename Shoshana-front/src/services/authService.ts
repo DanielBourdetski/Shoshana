@@ -1,5 +1,6 @@
 import store, { generalActions } from "../store/store";
 import httpService from "./httpService";
+import localService from "./localService";
 
 type UserData = { ok: boolean; res: string };
 type RegistrationData = {
@@ -22,6 +23,7 @@ interface AuthService {
     DEBUG?: boolean
   ) => Promise<UserData>;
   register: (userData: RegistrationData, DEBUG?: boolean) => Promise<any>;
+  logout: () => void;
   isLoggedIn: () => boolean;
 }
 
@@ -113,6 +115,11 @@ const authService: AuthService = {
       // TODO think of something better
       return { ok: false, res: err.response.data };
     }
+  },
+
+  logout: () => {
+    store.dispatch(generalActions.logout);
+    localService.deleteToken();
   },
 
   isLoggedIn: () => store.getState().general.isLoggedIn,

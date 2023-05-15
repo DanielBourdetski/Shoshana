@@ -6,7 +6,12 @@ export const fetchToken = () => {
   localStorage.getItem("token");
 };
 
+export const deleteToken = () => {
+  localStorage.removeItem("token");
+};
+
 export default {
   saveToken,
   fetchToken,
+  deleteToken,
 };
