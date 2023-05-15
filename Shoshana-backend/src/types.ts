@@ -32,7 +32,7 @@ export type AppointmentDate = {
 export type Appointment = {
 	title: string;
 	description: string;
-	author: string;
+	client: string;
 	date: AppointmentDate;
 };
 
