@@ -1,13 +1,11 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState} from "react";
+import {NavLink } from "react-router-dom";
 import { CgMenu } from "react-icons/cg";
 import { GrClose } from "react-icons/gr";
 
 // TODO add path in navigate function
 
 export default function navBar() {
-  const navigate = useNavigate();
-
   // toggling menu and hamburger icon on small screenss
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -24,37 +22,42 @@ export default function navBar() {
         </div>
 
         <ul
-          className={`absolute shadow px-10 py-5 bg-slate-100 transform -translate-x-80 ${
-            isMobileMenuOpen ? "translate-x-0" : ""
-          } md:flex md:items-center z-[-1] md:z-auto md:static 
+          className={`absolute shadow px-5 py-5 bg-slate-100  transform opacity-0  ${isMobileMenuOpen ? "opacity-100 duration-150 " : "duration-150"
+            } md:flex md:items-center z-[-1] md:z-auto md:static 
                 md:w-auto
-             md:opacity-100 duration-150`}
+                md:opacity-100 w-full left-0`}
         >
           <li className="mx-4 my-6 md:my-0">
-            <button
-              className="text-x1 hover:text-cyan-500 duration-500"
-              onClick={() => navigate("/")}
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive ? "font-bold" : ""
+              }
             >
               HOME
-            </button>
+            </NavLink>
           </li>
 
           <li className="mx-4 my-6 md:my-0">
-            <button
-              className="text-x1 hover:text-cyan-500 duration-500"
-              onClick={() => navigate("/")}
+            <NavLink
+              to={"/"}
+              className={({ isActive }) =>
+                isActive ? "font-bold" : ""
+              }
             >
               ABOUT
-            </button>
+            </NavLink>
           </li>
 
           <li className="mx-4 my-6 md:my-0">
-            <button
-              className="text-x1 hover:text-cyan-500 duration-500"
-              onClick={() => navigate("/")}
+            <NavLink
+              to={"/"}
+              className={({ isActive }) =>
+                isActive ? "font-bold" : ""
+              }
             >
               SiGN OUT
-            </button>
+            </NavLink>
           </li>
         </ul>
       </nav>
