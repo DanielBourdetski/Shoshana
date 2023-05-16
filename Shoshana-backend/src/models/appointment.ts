@@ -11,7 +11,7 @@ export interface IAppointment extends mongoose.Document {
 }
 
 // TODO add Appointment[] to business model
-const schema = new mongoose.Schema({
+export const appointmentSchema = new mongoose.Schema({
 	title: String,
 	description: String,
 	client: String,
@@ -28,6 +28,6 @@ const schema = new mongoose.Schema({
 	contactNumber: String,
 });
 
-const Appointment = mongoose.model("appointment", schema);
+const Appointment = mongoose.model("appointment", appointmentSchema);
 
 export default Appointment;

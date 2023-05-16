@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { appointmentSchema } from "./appointment";
 
 export interface IBusiness extends mongoose.Document {
 	username: string;
@@ -16,7 +17,7 @@ export interface IBusiness extends mongoose.Document {
 	fullName: string;
 }
 
-const schema = new mongoose.Schema(
+const businessSchema = new mongoose.Schema(
 	{
 		username: String,
 		password: String,
@@ -31,6 +32,7 @@ const schema = new mongoose.Schema(
 		logo: String,
 		isAdmin: Boolean,
 		date: { type: Date, default: Date.now },
+		appointments: [appointmentSchema],
 	},
 	{
 		virtuals: {
@@ -43,6 +45,6 @@ const schema = new mongoose.Schema(
 	}
 );
 
-const Business = mongoose.model<IBusiness>("business", schema);
+const Business = mongoose.model<IBusiness>("business", businessSchema);
 
 export default Business;
