@@ -4,7 +4,7 @@ import { verifyJWTToken } from "../jwt";
 import Business, { IBusiness } from "../models/business";
 
 interface AuthRequest extends Request {
-	user?: IBusiness;
+	business?: IBusiness;
 }
 
 export const auth = async (
@@ -27,11 +27,12 @@ export const auth = async (
 	}
 
 	const tokenData = verifyJWTToken(token);
-	const user = await Business.findById(tokenData.userId);
 
-	if (!user) return res.status(400).send("Invalid User Id");
+	const business = await Business.findById(tokenData.userId);
 
-	req.user = user;
+	if (!business) return res.status(400).send("Invalid User Id");
+
+	req.business = business;
 	next();
 };
 
@@ -53,12 +54,12 @@ export const adminAuth = async (
 	}
 
 	const tokenData = verifyJWTToken(token);
-	const user = await Business.findById(tokenData.userId);
+	const business = await Business.findById(tokenData.userId);
 
-	if (!user) return res.status(400).send("Invalid User Id");
+	if (!business) return res.status(400).send("Invalid User Id");
 
-	if (!user.isAdmin) return res.status(401).send("Unauthorized");
+	if (!business.isAdmin) return res.status(401).send("Unauthorized");
 
-	req.user = user;
+	req.business = business;
 	next();
 };
