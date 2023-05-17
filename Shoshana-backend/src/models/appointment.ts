@@ -8,6 +8,7 @@ export interface IAppointment extends mongoose.Document {
 	date: AppointmentDate;
 	notes: string;
 	contactNumber: string;
+	businessId: string;
 }
 
 // TODO add Appointment[] to business model
@@ -26,6 +27,7 @@ export const appointmentSchema = new mongoose.Schema({
 	},
 	notes: String,
 	contactNumber: String,
+	businessId: String,
 });
 
 const Appointment = mongoose.model("appointment", appointmentSchema);

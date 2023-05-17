@@ -1,5 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { appointmentSchema } from "./appointment";
+import { Appointment } from "../types";
 
 export interface IBusiness extends mongoose.Document {
 	username: string;
@@ -15,6 +16,7 @@ export interface IBusiness extends mongoose.Document {
 	isAdmin: boolean;
 	date: Date;
 	fullName: string;
+	appointments: string[];
 }
 
 const businessSchema = new mongoose.Schema(
