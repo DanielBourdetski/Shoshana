@@ -66,6 +66,7 @@ router.post("/register", async (req, res) => {
 		return res.status(201).send({
 			token: generateJWTToken({
 				username: business.username,
+				userId: business._id,
 				isAdmin: business.isAdmin,
 			}),
 		});
@@ -109,6 +110,7 @@ router.post("/login", async (req, res) => {
 	res.send({
 		token: generateJWTToken({
 			username: user.username,
+			userId: user._id,
 			isAdmin: user.isAdmin,
 		}),
 	});
