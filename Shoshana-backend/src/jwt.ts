@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 // TODO move to .env file, make it dynamic
 const secret = "g+oRbMxbTrIDGX9k9wJwJxZvzQvWc0D8hhn2wakYBQk=";
 
-type TokenData = { username: string; isAdmin?: boolean };
+type TokenData = { username: string; userId: string; isAdmin?: boolean };
 
 interface DecodedToken extends jwt.JwtPayload {
 	username: string;
@@ -20,8 +20,7 @@ export function verifyJWTToken(token: string): {
 }
 
 export function generateJWTToken(data: TokenData): string {
-	const payload: TokenData = { username: data.username };
-	if (data.isAdmin) payload.isAdmin = data.isAdmin;
+	const payload: TokenData = { ...data };
 
 	// TODO choose and implement expiration
 	const token = jwt.sign(payload, secret);
