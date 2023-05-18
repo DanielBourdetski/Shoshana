@@ -3,12 +3,12 @@ import { getIntervals, toStringWeekDay } from "../../../services/dates";
 import { DateTime } from "luxon";
 import TimeSlot from "./TimeSlot";
 import AppointmentDetails, {
-  AppointmentDetailsType,
+  AppointmentDatasType,
 } from "../AppointmentDetails";
 
 const Day: React.FC<{ day: DateTime }> = ({ day }) => {
   const [timeslotDetails, setTimeslotDetails] =
-    useState<AppointmentDetailsType | null>(null);
+    useState<AppointmentDatasType | null>(null);
   // TODO accept dynamic opening hours
   const apps = [{ date: "today", hour: 8, minute: 30 }]; // ? should be fetched data
   const appsHourFormats = apps.map(

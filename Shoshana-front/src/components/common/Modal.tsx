@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import useClickOutside from "../../../hooks/useClickOutside";
+import useClickOutside from "../../hooks/useClickOutside";
 
 const Modal: React.FC<{ onClose: () => void; children: ReactNode }> = ({
   onClose,

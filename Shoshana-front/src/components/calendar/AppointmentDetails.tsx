@@ -1,25 +1,35 @@
 import React from "react";
-import Modal from "./common/Modal";
+import Modal from "../common/Modal";
 
-export type AppointmentDetailsType = {
-  client: string;
-  time: string;
-  date: string;
+export type AppointmentDatasType = {
+  title: string;
   description: string;
+  client: string;
+  date: {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    hourDiff: number;
+    minuteDiff: number;
+  };
+  notes: string;
+  contactNumber: string;
+  businessId: string;
 };
 
 const AppointmentDetails: React.FC<{
   className?: string;
-  appointmentDetails: AppointmentDetailsType;
+  appointmentData: AppointmentDatasType;
   onClose: () => void;
-}> = ({ appointmentDetails, onClose }) => {
-  const { client, time, date, description } = appointmentDetails;
+}> = ({ appointmentData, onClose }) => {
+  const { client, description } = appointmentData;
+
   return (
     <Modal onClose={onClose}>
       <div className="flex flex-col justify-center items-center">
         <span>{client}</span>
-        <span>{time}</span>
-        <span>{date}</span>
         <span>{description}</span>
       </div>
     </Modal>
