@@ -9,8 +9,10 @@ import AppointmentDetails, {
 const Day: React.FC<{ day: DateTime }> = ({ day }) => {
   const [timeslotDetails, setTimeslotDetails] =
     useState<AppointmentDatasType | null>(null);
+
   // TODO accept dynamic opening hours
   const apps = [{ date: "today", hour: 8, minute: 30 }]; // ? should be fetched data
+  1;
   const appsHourFormats = apps.map(
     ({ hour, minute }) =>
       hour.toString().padStart(2, "0") + ":" + minute.toString()
@@ -22,10 +24,21 @@ const Day: React.FC<{ day: DateTime }> = ({ day }) => {
     console.log(fullDate);
 
     setTimeslotDetails({
-      client: "Michael",
-      date: day.toFormat("dd.MM.yyyy"),
-      description: "Brazilian Wax",
-      time,
+      title: "brazilian",
+      description: "wax that arm (?)",
+      client: "one of the coen brothers",
+      date: {
+        year: 2023,
+        month: 5,
+        day: 29,
+        hour: 15,
+        minute: 30,
+        hourDiff: 0,
+        minuteDiff: 0,
+      },
+      notes: "buff dude",
+      contactNumber: "0545454545",
+      businessId: "someid",
     });
   };
 
@@ -51,7 +64,7 @@ const Day: React.FC<{ day: DateTime }> = ({ day }) => {
     <div className="h-full bg-gray-300 flex-1 flex flex-col justify-start items-center p-15 border-e border-slate-500 last:border-e-0">
       {timeslotDetails !== null && (
         <AppointmentDetails
-          appointmentDetails={timeslotDetails}
+          appointmentData={timeslotDetails}
           onClose={() => setTimeslotDetails(null)}
         />
       )}
