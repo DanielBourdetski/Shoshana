@@ -44,7 +44,7 @@ export type Business = WithId<{
 		private: string;
 		public: string;
 	};
-	appointments: Appointment[];
+	appointments: String[];
 	logo: string;
 }>;
 

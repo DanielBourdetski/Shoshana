@@ -34,7 +34,7 @@ const businessSchema = new mongoose.Schema(
 		logo: String,
 		isAdmin: Boolean,
 		date: { type: Date, default: Date.now },
-		appointments: [appointmentSchema],
+		appointments: [String],
 	},
 	{
 		virtuals: {
