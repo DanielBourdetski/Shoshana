@@ -5,7 +5,7 @@ type InputProps = {
   onChange: Function;
   value: string;
   label: string;
-  password?: boolean;
+  type?: "text" | "password" | "number" ;
   error?: string;
 };
 
@@ -14,7 +14,7 @@ const Input: React.FC<InputProps> = ({
   onChange,
   value,
   label,
-  password = false,
+  type = "text",
   error,
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false);
@@ -37,7 +37,7 @@ const Input: React.FC<InputProps> = ({
             error && "border-b-red-500 bg-red-50 focus:bg-red-100"
           }`}
           id={label}
-          type={password ? "password" : "text"}
+          type={type}
           onFocus={() => setInputIsFocused(true)}
           onBlur={() => (value ? null : setInputIsFocused(false))}
           onChange={(e) => onChange(e.target.value)}

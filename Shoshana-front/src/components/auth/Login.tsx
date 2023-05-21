@@ -60,7 +60,7 @@ const Login = () => {
 
       <Input
         label="Password"
-        password
+        type="password"
         onChange={(value: string) => updateFieldInState(value, "password")}
         value={credentials.password}
       />

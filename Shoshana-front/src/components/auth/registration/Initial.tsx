@@ -61,14 +61,14 @@ const Initial: React.FC<Initial> = ({
 
       <Input
         label="Password"
-        password
+        type="password"
         onChange={(value: string) => updateField(value, "password")}
         value={credentials.password}
       />
 
       <Input
         label="Repeat Password"
-        password
+        type="password"
         onChange={(value: string) => updateField(value, "repeatPassword")}
         value={credentials.repeatPassword}
       />

@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import NavBar from "./components/navBar/NavBar";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
+import AddAppointment from "./components/calendar/AddAppointment";
 
 function App() {
   const [debug, setDebug] = useState(true);
@@ -30,6 +31,7 @@ function App() {
   return (
     <>
       <div className="w-full h-full p-4 overflow-y-auto">
+        <AddAppointment/>
         {isLoggedIn && <NavBar />}
         <ToastContainer limit={3} position="bottom-center" />
         <Routes>{routesArr}</Routes>
