@@ -1,20 +1,24 @@
 import { Router } from "express";
 // import { createAuthMiddleware } from "../middleware/auth";
 import { UserType } from "../types";
+import { ExtendedRequest, auth } from "../middleware/auth";
 
 let router = Router();
 
 // const authBusiness = createAuthMiddleware([UserType.Business, UserType.Admin]);
 
 // read
-router.get("/business/[id]", (req, res) => {});
+router.get("/:id", (req, res) => {});
 
-router.get("/business", (req, res) => {});
+router.get("", auth, (req: ExtendedRequest, res) => {
+	console.log(req.business);
+	res.json(req.business);
+});
 
-router.post("/businesss", (req, res) => {});
+router.post("", (req, res) => {});
 
 // write
-router.post("/business/[id]", (req, res) => {});
+router.post("/:id", (req, res) => {});
 
 // read business icon
-router.get("/business/icon/[id]", (req, res) => {});
+router.get("/icon/:id", (req, res) => {});
