@@ -12,6 +12,9 @@ export enum RegisterError {
 	EmailTaken = "Email Taken",
 }
 
+const israeliPhoneNumberRegex =
+	/^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\.|-)?([1-9]\d?))|(0[23489]{1})|(0[57]{1}[0-9]))(?:\s|\.|-)?([^0\D]{1}\d{2}(?:\s|\.|-)?\d{4})$/;
+
 export const registerValidationScheme = z.object({
 	username: z.string().min(3).max(50),
 
@@ -23,7 +26,10 @@ export const registerValidationScheme = z.object({
 	}),
 	businessName: z.string(),
 	address: z.string(),
-	phoneNumbers: z.object({ private: z.string(), public: z.string() }),
+	phoneNumbers: z.object({
+		private: z.string().regex(israeliPhoneNumberRegex),
+		public: z.string().regex(israeliPhoneNumberRegex),
+	}),
 	logo: z.string(),
 });
 
