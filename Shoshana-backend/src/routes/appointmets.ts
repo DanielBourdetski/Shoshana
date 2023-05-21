@@ -1,13 +1,9 @@
 import { Request, Router } from "express";
-import { auth } from "../middleware/auth";
+import { ExtendedRequest, auth } from "../middleware/auth";
 import { Business as BusinessType } from "../types";
 import Appointment, { IAppointment } from "../models/appointment";
 import Business from "../models/business";
 const router = Router();
-
-type ExtendedRequest = Request & {
-	business?: BusinessType; // Add the business property to the ExtendedRequest type
-};
 
 // ? get all appointments of logged business /
 router.get("/", auth, (req: ExtendedRequest, res) => {
