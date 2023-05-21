@@ -31,7 +31,7 @@ const TextArea: React.FC<TextAreaProps> = ({
           {label}
         </label>
         <textarea
-          className={`w-60 rounded-t border-b border-b-blue-400 bg-blue-50 outline-none p-2 ps-4 focus:bg-blue-100 focus:border-b-2 duration-300 ease-in-out ${
+          className={`min-h-[5em] w-60 rounded-t border-b border-b-blue-400 bg-blue-50 outline-none p-2 ps-4 focus:bg-blue-100 focus:border-b-2 duration-300 ease-in-out ${
             error && "border-b-red-500 bg-red-50 focus:bg-red-100"
           }`}
           id={label}

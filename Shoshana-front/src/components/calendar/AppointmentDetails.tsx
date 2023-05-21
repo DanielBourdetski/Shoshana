@@ -24,12 +24,15 @@ const AppointmentDetails: React.FC<{
   appointmentData: AppointmentDatasType;
   onClose: () => void;
 }> = ({ appointmentData, onClose }) => {
-  const { client, description } = appointmentData;
+  const { client, description, title, contactNumber, notes } = appointmentData;
 
   return (
     <Modal onClose={onClose}>
       <div className="flex flex-col justify-center items-center">
+        <span>{title}</span>
         <span>{client}</span>
+        <span>{contactNumber}</span>
+        <span>{notes}</span>
         <span>{description}</span>
       </div>
     </Modal>
