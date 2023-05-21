@@ -3,12 +3,12 @@ import type { Request, Response, NextFunction, RequestHandler } from "express";
 import { verifyJWTToken } from "../jwt";
 import Business, { IBusiness } from "../models/business";
 
-interface AuthRequest extends Request {
+export interface ExtendedRequest extends Request {
 	business?: IBusiness;
 }
 
 export const auth = async (
-	req: AuthRequest,
+	req: ExtendedRequest,
 	res: Response,
 	next: NextFunction
 ) => {
@@ -37,7 +37,7 @@ export const auth = async (
 };
 
 export const adminAuth = async (
-	req: AuthRequest,
+	req: ExtendedRequest,
 	res: Response,
 	next: NextFunction
 ) => {
