@@ -31,7 +31,6 @@ function App() {
   return (
     <>
       <div className="w-full h-full p-4 overflow-y-auto">
-        <AddAppointment/>
         {isLoggedIn && <NavBar />}
         <ToastContainer limit={3} position="bottom-center" />
         <Routes>{routesArr}</Routes>
