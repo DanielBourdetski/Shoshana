@@ -3,6 +3,7 @@ import { ExtendedRequest, auth } from "../middleware/auth";
 import { Business as BusinessType } from "../types";
 import Appointment, { IAppointment } from "../models/appointment";
 import Business from "../models/business";
+import mongoose from "mongoose";
 const router = Router();
 
 // ? get all appointments of logged business /
@@ -36,6 +37,29 @@ router.get("/:id", auth, async (req: ExtendedRequest, res) => {
 		res.json(requestedApt);
 	} catch (err) {
 		res.status(500).send("Unexpected Server Error");
+	}
+});
+
+router.get("/by-business-id/:id", auth, async (req, res) => {
+	const businessId = req.params.id;
+
+	if (!businessId) return res.status(400).send("No ID provided");
+
+	try {
+		const business = await Business.findById(businessId);
+
+		if (!business) return res.status(400).send("Invalid business ID");
+
+		const appointments = await Appointment.find()
+			.where("_id")
+			.in(business.appointments)
+			.lean()
+			.exec();
+
+		res.send(appointments);
+	} catch (err) {
+		console.log(err);
+		res.status(500).send(err.message);
 	}
 });
 
