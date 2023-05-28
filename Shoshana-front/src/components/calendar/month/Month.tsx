@@ -12,18 +12,16 @@ const Month = () => {
 
   const closeDate = () => setDate(null);
 
-  const dt = DateTime.utc();
-
-  const currentDate = new Date();
+  const currentDate = DateTime.now();
   const { dateType } = useLocale("dateType");
 
-  const days = getMonthDays(currentDate.getFullYear(), currentDate.getMonth());
+  const days = getMonthDays(currentDate.year, currentDate.month);
 
   if (days === undefined) return <div>getDayOfMonth returns undefined</div>;
 
   // ? if first day of the month is not sunday, fill in the blanks to fit the sunday-through-saturday month grid
   const fillInDays = [];
-  for (let i = 1; i < days[0].weekday; i++) {
+  for (let i = 1; i < days[0].weekday + 1; i++) {
     fillInDays.push(
       <div key={i} className="p-2 border bg-gray-200 opacity-50">
         FILL
@@ -36,17 +34,14 @@ const Month = () => {
       {date && <DayDetails date={date} onClose={closeDate} />}
 
       <h2 className="text-center my-10 text-4xl font-bold">
-        {currentDate.toLocaleDateString("en-us", {
-          month: "long",
-          year: "numeric",
-        })}
+        {currentDate.toFormat("LLLL yyyy")}
       </h2>
 
       <div className="grid grid-r gap-4 grid-cols-7 w-full">
         {fillInDays}
 
         {days.map((day) => {
-          const apps = appointments.filter((a) => a.dateUTC.day === day.day);
+          const apps = appointments.filter((a) => a.date.day === day.day);
 
           return (
             <Day
