@@ -1,6 +1,6 @@
 import httpService from "./httpService";
 
-export const addAppointment = async ({}) => {};
+export const addAppointment = async () => {};
 
 export const updateAppointment = async () => {};
 

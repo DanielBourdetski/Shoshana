@@ -5,17 +5,18 @@ import { DateTime } from "luxon";
 type Locale = "en-US" | "en-GB" | "he-IL";
 
 export function getMonthDays(year: number, month: number): DateTime[] | void {
-  const today = DateTime.local();
+  const date = DateTime.local(year, month, 1);
 
-  const daysInMonth = DateTime.local(year, month, 1).daysInMonth;
+  const daysInMonth = date.daysInMonth;
+  console.log(daysInMonth);
 
   if (daysInMonth === undefined)
     return console.error("error: daysInMonth is undefined");
 
   const daysArray = [];
 
-  for (let i = 1; i < daysInMonth; i++) {
-    const day = DateTime.local(today.year, today.month, i);
+  for (let i = 1; i <= daysInMonth; i++) {
+    const day = DateTime.local(date.year, date.month, i);
     daysArray.push(day);
   }
 
