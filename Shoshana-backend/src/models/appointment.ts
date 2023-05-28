@@ -22,8 +22,6 @@ export const appointmentSchema = new mongoose.Schema({
 		day: Number,
 		hour: Number,
 		minute: Number,
-		hourDiff: Number,
-		minuteDiff: Number,
 	},
 	notes: String,
 	contactNumber: String,

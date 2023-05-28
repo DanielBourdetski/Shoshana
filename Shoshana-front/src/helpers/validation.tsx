@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Appointment } from "../types";
 
 const israeliPhoneNumberRegex =
   /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\.|-)?([1-9]\d?))|(0[23489]{1})|(0[57]{1}[0-9]))(?:\s|\.|-)?([^0\D]{1}\d{2}(?:\s|\.|-)?\d{4})$/;
@@ -8,6 +9,23 @@ const passwordSchema = z.string().min(8).max(50);
 const emailSchema = z.string().email();
 const phoneNumberSchema = z.string().regex(israeliPhoneNumberRegex);
 const addressSchema = z.string().max(200);
+
+const appointmentSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  client: z.string(),
+  date: z.object({
+    year: z.number(),
+    month: z.number(),
+    day: z.number(),
+    hour: z.number(),
+    minute: z.number(),
+  }),
+  notes: z.string(),
+  contactNumber: z.string(),
+});
+
+const validateAppointment = (appointment: Appointment) => {};
 
 export const validateUsername = (username: string) => {
   try {
