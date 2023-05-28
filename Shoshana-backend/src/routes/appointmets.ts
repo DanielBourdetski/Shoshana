@@ -4,6 +4,7 @@ import { Business as BusinessType } from "../types";
 import Appointment, { IAppointment } from "../models/appointment";
 import Business from "../models/business";
 import mongoose from "mongoose";
+import { z } from "zod";
 const router = Router();
 
 // ? get all appointments of logged business /
@@ -57,36 +58,79 @@ router.get("/by-business-id/:id", auth, async (req, res) => {
 			.exec();
 
 		res.send(appointments);
-	} catch (err) {
+	} catch (err: any) {
 		console.log(err);
 		res.status(500).send(err.message);
 	}
 });
 
 // ? create new appointment
+const appointmentSchema = z.object({
+	title: z.string(),
+	description: z.string(),
+	client: z.string(),
+	date: z.object({
+		year: z.number(),
+		month: z.number(),
+		day: z.number(),
+		hour: z.number(),
+		minute: z.number(),
+	}),
+	notes: z.string(),
+	contactNumber: z.string(),
+});
+
 router.post("/", auth, async (req: ExtendedRequest, res) => {
-	const apt = req.body;
+	try {
+		const validatedApt = appointmentSchema.parse(req.body);
 
-	const newApt = new Appointment({
-		...apt,
-		businessId: req.business?._id.toString(),
-	});
+		const newApt = new Appointment({
+			...validatedApt,
+			businessId: req.business?._id.toString(),
+		});
 
-	req.business?.appointments.push(newApt._id.toString());
+		req.business?.appointments.push(newApt._id.toString());
 
-	const businessInstance = await Business.findById(req.business?._id);
-	businessInstance?.appointments.push(newApt._id.toString());
+		const businessInstance = await Business.findById(req.business?._id);
+		businessInstance?.appointments.push(newApt._id.toString());
 
-	console.log(businessInstance?.appointments);
+		await businessInstance?.save();
+		await newApt.save();
 
-	await businessInstance?.save();
-	await newApt.save();
-
-	res.json(newApt);
+		res.json(newApt);
+	} catch (error) {
+		console.error(error);
+		res.status(400).send("Invalid Data");
+	}
 });
 
 // ? update appointment
-router.put("/:id", (req: ExtendedRequest, res) => {});
+// TODO test
+router.put("/:id", async (req: ExtendedRequest, res) => {
+	const aptId = req.params.id;
+
+	if (!req.business?.appointments.includes(aptId))
+		return res.status(400).send("Invalid Id");
+
+	const updatedAptData = req.body;
+
+	try {
+		const appointment = await Appointment.findById(aptId);
+		if (!appointment) {
+			// If appointment doesn't exist, remove it from business.appointments
+			const business = req.business;
+			if (business) {
+				business.appointments = business.appointments.filter(
+					(apt) => apt.toString() !== aptId
+				);
+				await business.save();
+			}
+			return res.status(400).send("Invalid Id");
+		}
+
+		console.log(appointment);
+	} catch (err: any) {}
+});
 
 // ? cancel an appointment, will leave it in the database
 router.delete("/:id", (req: ExtendedRequest, res) => {});
