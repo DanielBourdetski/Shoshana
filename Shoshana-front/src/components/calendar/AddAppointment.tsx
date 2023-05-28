@@ -5,11 +5,9 @@ import Button from '../common/Button';
 import toaster from "../../helpers/toaster";
 
 
-// ? ask where the check functions will be (in submit or before submitting)
 
-const AddAppointment: React.FC<{
 
-}> = ({
+const AddAppointment: React.FC<{}> = ({
 
 }) => {
         const israeliPhoneNumberRegex =
