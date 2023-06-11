@@ -1,11 +1,15 @@
 import { Route, Routes } from "react-router-dom";
 import routes from "../../config/routes";
+import { getAppointments } from "../../services/appointmentService";
 
 const Calendar = () => {
   const { calendarRoutes } = routes;
   const routesArr = calendarRoutes.map((r) => (
     <Route key={r.path} Component={r.Element} path={r.path} />
   ));
+
+  getAppointments();
+
   return (
     <div className="w-full h-full">
       <Routes>{routesArr}</Routes>

@@ -34,6 +34,9 @@ export type Appointment = {
 	description: string;
 	client: string;
 	date: AppointmentDate;
+	notes: string;
+	contactNumber: string;
+	businessId: string;
 };
 
 export type Business = WithId<{
