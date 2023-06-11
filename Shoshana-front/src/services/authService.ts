@@ -1,5 +1,5 @@
 import store, { generalActions } from "../store/store";
-import httpService from "./httpService";
+import httpService, { updateHeader } from "./httpService";
 import localService from "./localService";
 
 type UserData = { ok: boolean; res: string };
@@ -46,6 +46,7 @@ const authService: AuthService = {
 
       // ? might need to be moved to another place
       localStorage.setItem("token", loginResponse.data.token);
+      updateHeader(loginResponse.data.token);
 
       // TODO think of something better
       return { ok: true, res: loginResponse.data.token };
@@ -106,6 +107,7 @@ const authService: AuthService = {
 
       // ? might need to be moved to another place
       localStorage.setItem("token", registerResponse.data.token);
+      updateHeader(registerResponse.data.token);
 
       // TODO think of something better
       return { ok: true, res: registerResponse.data.token };
