@@ -1,17 +1,19 @@
 import { Request, Router } from "express";
 import { ExtendedRequest, auth } from "../middleware/auth";
-import { Business as BusinessType } from "../types";
 import Appointment, { IAppointment } from "../models/appointment";
 import Business from "../models/business";
-import mongoose from "mongoose";
 import { z } from "zod";
+import { mockApps } from "../mock/mockApps";
 const router = Router();
 
 // ? get all appointments of logged business /
 router.get("/", auth, (req: ExtendedRequest, res) => {
+	// ! mock data **********
+	return res.send(mockApps);
+
 	const apts = req.business?.appointments;
 
-	if (!apts || !apts.length) return res.send("No Appointments");
+	if (!apts || !apts?.length) return res.send("No Appointments");
 
 	res.json(req.business?.appointments);
 });
