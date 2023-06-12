@@ -6,7 +6,6 @@ import toaster from "../../helpers/toaster";
 
 
 
-
 const AddAppointment: React.FC<{}> = ({
 
 }) => {

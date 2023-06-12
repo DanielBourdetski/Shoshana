@@ -6,6 +6,7 @@ import Month from "../components/calendar/month/Month";
 import MonthRow from "../components/calendar/monthRow/MonthRow";
 import Week from "../components/calendar/week/Week";
 import Calendar from "../components/calendar/Calendar";
+import NextAppointment from "../components/NextAppointment";
 
 const routes = [
   // ! on route / no route is detected
@@ -26,12 +27,19 @@ const routes = [
     Element: Calendar,
     protected: true,
   },
+  {
+    path:"next-appointments",
+    Element: NextAppointment,
+    protected: true
+  },
 
   {
     path: "/",
     Element: () => <Navigate to="/calendar" />,
     protected: false,
   },
+
+
 ];
 
 const calendarRoutes = [

@@ -93,9 +93,9 @@ const appointments: Appointment[] = [
   },
 ];
 
-const CalendarService = {};
+const CalendarService = {} ;
 
-const getAppointments = () => appointments;
+export const getAppointments = () => appointments;
 
 export default {
   getAppointments,

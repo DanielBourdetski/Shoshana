@@ -9,8 +9,14 @@ import NavBar from "./components/navBar/NavBar";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import AddAppointment from "./components/calendar/AddAppointment";
+// import NextAppointment from "./components/NextAppointment";
+import { Appointment } from "./types";
+// import { getAppointments } from "./services/calendarService";
+
+
 
 function App() {
+  
   const [debug, setDebug] = useState(true);
   const isLoggedIn = useSelector(
     (state: RootState) => state.general.isLoggedIn
